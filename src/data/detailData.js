@@ -4,6 +4,8 @@ import DemoUseEffect from "../components/demos/DemoUseEffect.jsx"; // the compon
 import DemoUseRef from "../components/demos/DemoUseRef.jsx"; // the component that renders a useRef();
 import DemoUseContext from "../components/demos/DemoUseContext.jsx"; // the component that renders a useContext();
 import DemoUseMemo from "../components/demos/DemoUseMemo.jsx"; // the component that renders a useMemo();
+import DemoUse from "../components/demos/DemoUse.jsx"; // the component that renders a use();
+import DemoUseGSAP from "../components/demos/DemoUseGSAP.jsx"; // the component that renders a use();
 
 /*
 -- Notes:
@@ -329,12 +331,7 @@ const detail = [
     //   it just reaches directly into the DOM and calls a native browser method (.focus())
     //   No state changed, no re-render happened — that's the whole point of this hook.
      `,
-    tags: [
-      "useRef()",
-      "dom targeting",
-      ".js data-file",
-      ".jsx demo-file",
-    ],
+    tags: ["useRef()", "dom targeting", ".js data-file", ".jsx demo-file"],
     demo: DemoUseRef, // calling the component that renders a useRef(); so it can be used in the Card.jsx component
     category: "React Hooks",
   },
@@ -636,6 +633,302 @@ const detail = [
       "stored functions",
     ],
     demo: DemoUseMemo, // calling the component that renders a useMemo(); so it can be used in the Card.jsx component
+    category: "React Hooks",
+  },
+  {
+    title: "use() React Hook",
+    description:
+      "use() is a newer, more flexible way to read values in React — currently covering two main jobs: (1) reading a Context value, same job as useContext, and (2) reading the resolved value of a Promise, pausing the component's render (via Suspense) until that Promise settles. The key thing that sets it apart from every other hook you've built so far: use() can be called conditionally — inside an if statement, after an early return, inside a loop — something that breaks the Rules of Hooks for every hook we've covered (useState, useEffect, useRef, useContext, useMemo all must be called unconditionally, every render, same order every time). use() is technically not bound by that same rule, since React handles it differently under the hood.",
+    example: `
+    ██╗   ██╗███████╗███████╗
+    ██║   ██║██╔════╝██╔════╝
+    ██║   ██║███████╗█████╗  
+    ██║   ██║╚════██║██╔══╝  
+    ╚██████╔╝███████║███████╗
+     ╚═════╝ ╚══════╝╚══════╝
+
+    // useContext
+    const value = useContext(MyContext);
+
+    // use() — does the exact same job here
+    const value = use(MyContext);
+
+    // example usage
+    import { use, createContext } from "react";
+
+    const MyContext = createContext();
+
+    function ChildComponent() {
+      const value = use(MyContext);
+      return <p>{value}</p>;
+    }
+
+     /*
+      For this specific job (reading a Context value), they're functionally interchangeable — same result,
+      same Provider setup required, nothing else changes. The real difference only shows up in where
+      you're allowed to call them:
+    */
+    function ChildComponent({ showValue }) {
+      // ❌ Illegal with useContext — hooks can't be conditional
+      if (showValue) {
+        const value = useContext(MyContext);
+      }
+
+      // ✅ Legal with use() — this is the one real advantage here
+      if (showValue) {
+        const value = use(MyContext);
+        return <p>{value}</p>;
+      }
+
+      return <p>Hidden</p>;
+    }
+
+    // ============================================
+    // DOES use() REPLACE useContext AND useMemo?
+    // ============================================
+    //
+    // useContext -- YES, use() genuinely replaces it for reading context.
+    //   use(MyContext) does the exact same job as useContext(MyContext),
+    //   with one real advantage: use() can be called conditionally
+    //   (inside an if, after an early return, inside a loop) — something
+    //   useContext can NEVER do, since hooks must run unconditionally,
+    //   every render, same order every time.
+    //
+    //   const value = useContext(MyContext);  // must be unconditional
+    //   const value = use(MyContext);         // can be conditional
+    //
+    //
+    // useMemo -- NO, use() does NOT replace useMemo. These solve
+    //   two completely unrelated problems:
+    //
+    //   useMemo  -> caches an EXPENSIVE CALCULATION so it doesn't
+    //               re-run on every render. It's a performance tool.
+    //               const total = useMemo(() => slowSum(x), [x]);
+    //
+    //   use()    -> reads a value from something else entirely —
+    //               either a Context, or a Promise (pausing render
+    //               via Suspense until it resolves). It has nothing
+    //               to do with caching or skipping recalculation.
+    //               const value = use(MyContext);
+    //               const data  = use(fetchPromise);
+    //
+    //   There's no overlap in what problem these two hooks solve —
+    //   use() isn't a "newer useMemo," it's a "newer useContext"
+    //   (plus a way to read Promises, which is a new capability
+    //   neither useContext nor useMemo ever had).
+    //
+    //
+    // SUMMARY:
+    //   use() replaces:      useContext (for context-reading)
+    //   use() partially replaces: useEffect (only its data-fetching use case)
+    //   use() does NOT replace: useMemo (different job entirely — caching, not reading)
+
+    // ============================================
+    // THE use() WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // ============================================
+    //
+    //   App.jsx
+    //      | renders <Card />
+    //      v
+    //   Card.jsx
+    //      | imports detail array
+    //      v
+    //   detailData.js
+    //      | import DemoUse from "../components/demos/DemoUse.jsx";
+    //      | ...
+    //      | { title: "use() React Function", ..., demo: DemoUse }
+    //      v
+    //   DemoUse.jsx
+    //      | const MessageContext = createContext("Hello from Context!");
+    //      | const ConditionalReader = ({ showMessage }) => {
+    //      |   if (!showMessage) { return <p>Message hidden</p>; }
+    //      |   const message = use(MessageContext); // only called on SOME renders
+    //      |   return <p>{message}</p>;
+    //      | }
+    //      | const DemoUse = () => {
+    //      |   const [showMessage, setShowMessage] = useState(true);
+    //      |   return (
+    //      |     <MessageContext.Provider value="Hello from Context!">
+    //      |       <ConditionalReader showMessage={showMessage} />
+    //      |       <button onClick={() => setShowMessage(!showMessage)}>Toggle Message</button>
+    //      |     </MessageContext.Provider>
+    //      |   );
+    //      | }
+    //
+    // At render time in Card.jsx:
+    //   {details.demo && <details.demo />}
+    //   -> for the use() entry, this becomes <DemoUse />
+    //   -> mounts a Provider + toggle button + child that conditionally
+    //      calls use() based on the button's current state
+    //
+    // Difference from every other hook's wire so far:
+    //   Same exact pattern at the detailData.js/Card.jsx level
+    //   (import -> demo: field -> <details.demo />)
+    //   The only thing that changes per hook is WHICH file gets imported
+    //   and WHAT that file's internal logic does.
+    //
+    // What's different INSIDE this one, conceptually (not the wiring, the function itself):
+    //   useState's demo: state changes -> UI updates every time, on purpose
+    //   useEffect's demo: runs on its own, automatically, no click needed
+    //   useRef's demo: no re-render at all, direct DOM access
+    //   useContext's demo: value lives in a parent, read in a child, no props between them
+    //   useMemo's demo: two state values contrast a slow recalculation vs. an instant skip
+    //   use()'s demo: the ONLY demo where the hook/function call ITSELF is conditional —
+    //     every other demo always calls its hook the same way, every render.
+    //     This one visibly skips calling use() entirely on some renders (the early
+    //     return path), and calls it on others — proving the one real structural
+    //     rule use() breaks that every other hook in this registry must follow.
+     `,
+    tags: [
+      "use()",
+      "useContext()",
+      ".js data-file",
+      ".jsx demo-file",
+      "stored variables",
+      "stored functions",
+    ],
+    demo: DemoUse, // calling the component that renders a use(); so it can be used in the Card.jsx component
+    category: "React Hooks",
+  },
+  {
+    title: "useGSAP() React Hook",
+    description:
+      "useGSAP is the official React hook from @gsap/react — it's a drop-in replacement for useEffect() or useLayoutEffect() that automatically handles cleanup using gsap.context(), meaning any GSAP animations, ScrollTriggers, Draggables, or SplitText instances created inside the hook get automatically added to an internal context and reverted when the component unmounts — no manual cleanup code required. It also correctly handles React 18/19's Strict Mode double-invocation in development (raw useEffect GSAP code tends to visibly double-fire animations in Strict Mode; useGSAP doesn't), and is safe to use in Next.js or other server-side rendering environments, provided it's used in a client component. You typically register the hook itself as a plugin before using it: gsap.registerPlugin(useGSAP) — a required setup step that's easy to miss. The second argument accepts either a plain dependency array (like useEffect) or a config object for more control — most notably { scope: containerRef }, which scopes any CSS selector queries inside the hook to just that container's children, so you're not accidentally grabbing elements elsewhere on the page.",
+    example: `
+    ██╗   ██╗███████╗███████╗ ██████╗ ███████╗ █████╗ ██████╗ 
+    ██║   ██║██╔════╝██╔════╝██╔════╝ ██╔════╝██╔══██╗██╔══██╗
+    ██║   ██║███████╗█████╗  ██║  ███╗███████╗███████║██████╔╝
+    ██║   ██║╚════██║██╔══╝  ██║   ██║╚════██║██╔══██║██╔═══╝ 
+    ╚██████╔╝███████║███████╗╚██████╔╝███████║██║  ██║██║     
+     ╚═════╝ ╚══════╝╚══════╝ ╚═════╝ ╚══════╝╚═╝  ╚═╝╚═╝     
+
+    // basic shape
+    // 1. the second argument can be either a plain dependency array (like useEffect) or this
+        // config object — { scope: container } is the config-object form, used when you need
+        // more than just dependencies (scope, or other options like revertOnUpdate).
+    useGSAP(() => {gsap code goes here}, { scope: container });
+
+    // install dependancies
+    npm install @gsap/react
+    
+    // import dependancies
+    import { useRef } from "react";
+    import gsap from "gsap";
+    import { useGSAP } from "@gsap/react";
+
+    // gsap.registerPlugin(useGSAP) — a required one-time setup step. Confirmed: official
+    // docs show this in every example, register any plugins, including the useGSAP hook.
+    gsap.registerPlugin(useGSAP); // register once, before running useGSAP or any GSAP code
+
+    function Example() {
+      // Same DOM-access pattern you already know from your useRef card.
+      // This is what ties useRef and useGSAP together — GSAP needs a real DOM node,
+      // and useRef is how React gives you one.
+      const container = useRef();
+
+      /*
+        useGSAP(() => {...}, { scope: container }) — the callback is where your actual GSAP code goes.
+        The scope option is confirmed as optional, but the docs describe it as making it safer/easier
+        to write code that doesn't require you to create a useRef() for each and every element — meaning
+        with a scope set, gsap.to(".box", {...}) only searches for .box inside container, not the entire page.
+        Scope lets you use plain CSS selectors instead of a separate ref for every single element.
+      */
+      useGSAP(() => { // gsap code here...
+        
+        /*
+          gsap.to(".box", { x: 100 }) — anything created here (tweens, timelines, ScrollTriggers) gets
+          automatically added to an internal context and automatically reverted on unmount — no manual
+          cleanup function needed, unlike a raw useEffect version of the same thing.
+        */
+        gsap.to(".box", { x: 100 }); // <-- automatically reverted on unmount
+      }, { scope: container }); // <-- scope for selector text (optional)
+
+        return (
+          <div ref={container}>
+            <div className="box">Animated</div>
+          </div>
+        );
+      }
+
+    /* use cases
+      - Entrance animations
+        - elements fading/sliding in when a component first mounts (exactly what your demo does) — hero sections, cards appearing on page load, modal content animating in.
+      - Scroll-triggered animations (via GSAP's ScrollTrigger plugin)
+        - content animating as the user scrolls it into view; parallax effects; progress bars/timelines tied to scroll position. Confirmed from the docs — ScrollTrigger works directly inside useGSAP, same scope/cleanup benefits apply.
+      - Interactive UI feedback
+        — button hover/click animations, icon transformations, micro-interactions that feel more polished than a CSS transition alone (more control over easing, sequencing, and timing).
+      - State-driven animations
+        — animating an element differently based on app state, using the dependencies array (like your demo's replay button, but more commonly: an accordion opening/closing, a sidebar collapsing, a toggle switching states) — this is confirmed directly from the docs' own example: useGSAP(() => { gsap.to('.box', { x: isActive ? 200 : 0 }) }, { scope: container, dependencies: [isActive] }).
+      - Staggered list/grid animations
+        — multiple elements animating in sequence rather than all at once (cards in a grid appearing one after another, list items cascading in) — GSAP's stagger option is built for exactly this.
+      - Logo/branding flourishes
+        — this is directly relevant to your own real work: your billboard/sidebar logo scale-and-fade "pop" in Panther Tracker is precisely this use case — a small transform-based animation layered on top of a CSS transition, not replacing it.
+      - SVG and path animations
+        — drawing effects, icon morphing, animated illustrations — GSAP has specific plugins for this (DrawSVG, MorphSVG) that also benefit from the same scope/cleanup handling useGSAP provides.
+      - Complex sequenced timelines
+        — multiple animations that need to happen in a specific order with precise timing relationships (a loading sequence, a multi-step reveal), using gsap.timeline() inside the hook.
+    */
+
+    // ============================================
+    // THE useGSAP WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // ============================================
+    //
+    //   App.jsx
+    //      | renders <Card />
+    //      v
+    //   Card.jsx
+    //      | imports detail array
+    //      v
+    //   detailData.js
+    //      | import DemoUseGSAP from "../components/demos/DemoUseGSAP.jsx";
+    //      | ...
+    //      | { title: "useGSAP() React Hook", ..., demo: DemoUseGSAP }
+    //      v
+    //   DemoUseGSAP.jsx
+    //      | gsap.registerPlugin(useGSAP); // one-time setup, outside the component
+    //      | const container = useRef();
+    //      | const [key, setKey] = useState(0);
+    //      | useGSAP(() => {
+    //      |   gsap.from(".animate-box", { x: -100, opacity: 0, duration: 0.8 });
+    //      | }, { scope: container, dependencies: [key] });
+    //      | <div ref={container}>
+    //      |   <div className="animate-box" />
+    //      |   <button onClick={() => setKey(key + 1)}>Replay Animation</button>
+    //      | </div>
+    //
+    // At render time in Card.jsx:
+    //   {details.demo && <details.demo />}
+    //   -> for the useGSAP entry, this becomes <DemoUseGSAP />
+    //   -> mounts a box that animates in immediately, plus a button
+    //      that re-triggers the same animation on demand
+    //
+    // Difference from every other hook's wire so far:
+    //   Same exact pattern at the detailData.js/Card.jsx level
+    //   (import -> demo: field -> <details.demo />)
+    //   The only thing that changes per hook is WHICH file gets imported
+    //   and WHAT that file's internal logic does.
+    //
+    // What's different INSIDE this one, conceptually (not the wiring, the hook itself):
+    //   This is the ONLY demo in the registry that combines THREE hooks
+    //   working together at once, instead of showcasing one hook in isolation:
+    //     useRef    -> gives useGSAP a real DOM node to scope animations to
+    //     useState  -> the "key" trigger, changed on button click
+    //     useGSAP   -> reads that state via its dependencies array,
+    //                  reverts the previous animation, and replays a new one
+    //   Every other card in this registry taught ONE hook on its own.
+    //   This card is the first (and only) one that shows how earlier cards
+    //   in this same registry combine to build something real —
+    //   which is fitting, since it's the last card in the lineup.
+     `,
+    tags: [
+      "useGSAP()",
+      "useRef()",
+      "useState()",
+      "useEffect()",
+      ".js data-file",
+      ".jsx demo-file"
+    ],
+    demo: DemoUseGSAP, // calling the component that renders a useGSAP(); so it can be used in the Card.jsx component
     category: "React Hooks",
   },
 ];
