@@ -10,11 +10,13 @@ const DemoUseState = () => {
     // the function (or variable) used to update the state variable: setCount
   const [count, setCount] = useState(0);
 
+  // console.log(count);
+
   return (
     <div className="p-4 rounded-md border border-amber-300 bg-white">
       <p className="text-sm font-medium mb-2">Count: {count}</p>
       <button
-        onClick={() => setCount(count + 1)}
+        onClick={() => setCount(count + 1)} // whatever the initial value is (0) + 1
         className="px-3 py-1.5 rounded-md bg-amber-300 text-xs font-medium border border-amber-400 hover:bg-amber-400 transition-colors"
       >
         Add
