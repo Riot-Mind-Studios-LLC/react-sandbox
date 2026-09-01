@@ -423,6 +423,114 @@ const detail = [
     ╚██████╔╝ ███████║ ███████╗ ██║  ██║ ███████╗ ██║
      ╚═════╝  ╚══════╝ ╚══════╝ ╚═╝  ╚═╝ ╚══════╝ ╚═╝
 
+    // ============================================
+    // React useRef Hook
+    // ============================================
+    //
+    // The useRef Hook allows you to persist values between renders.
+    // It can be used to store a mutable value that does not cause a re-render when updated.
+    // It can be used to access a DOM element directly.
+    //
+    DOES NOT CAUSE RE-RENDERS
+    //
+    // If we tried to count how many times our application renders using the useState Hook, we would be caught in an infinite loop since this Hook itself causes a re-render.
+    // To avoid this, we can use the useRef Hook.
+    //
+    Example: Use useRef to track application renders.
+    import { useState, useRef, useEffect } from 'react';
+    import { createRoot } from 'react-dom/client';
+
+    function App() {
+      const [inputValue, setInputValue] = useState("");
+      const count = useRef(0);
+
+      useEffect(() => {
+        count.current = count.current + 1;
+      });
+
+      return (
+        <>
+          <p>Type in the input field:</p>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <h1>Render Count: {count.current}</h1>
+        </>
+      );
+    }
+
+    createRoot(document.getElementById('root')).render(
+      <App />
+    );
+    //
+    // useRef() only returns one item. It returns an Object called current.
+    // When we initialize useRef we set the initial value: useRef(0).
+    // It's like doing this: const count = {current: 0}. We can access the count by using count.current.
+    //
+    // ACCESSING DOM ELEMENTS
+    //
+    // The useRef Hook is often used to access DOM elements directly.
+    // First, we create a ref using the useRef Hook: const inputElement = useRef();.
+    // Then, we attach the ref to a DOM element using the ref attribute in JSX: <input type="text" ref={inputElement} />.
+    // Finally, we can access the DOM element using the current property: inputElement.current.
+    //
+    // Example: Use useRef to focus the input:
+    import { useRef } from 'react';
+    import { createRoot } from 'react-dom/client';
+
+    function App() {
+      const inputElement = useRef();
+
+      const focusInput = () => {
+        inputElement.current.focus();
+      };
+
+      return (
+        <>
+          <input type="text" ref={inputElement} />
+          <button onClick={focusInput}>Focus Input</button>
+        </>
+      );
+    }
+
+    createRoot(document.getElementById('root')).render(
+      <App />
+    );
+    //
+    // In the example, the input field gets focus when the button is clicked, because the onClick function calls inputElement.current.focus().
+    //
+    // TRACKING STATE CHANGES
+    //
+    // The useRef Hook can also be used to keep track of previous state values.
+    // This is because we are able to persist useRef values between renders.
+    //
+    // Example: Use useRef to keep track of previous state values:
+    function App() {
+      const [inputValue, setInputValue] = useState("");
+      const previousInputValue = useRef("");
+
+      useEffect(() => {
+        previousInputValue.current = inputValue;
+      }, [inputValue]);
+
+      return (
+        <>
+          <input
+            type="text"
+            value={inputValue}
+            onChange={(e) => setInputValue(e.target.value)}
+          />
+          <h2>Current Value: {inputValue}</h2>
+          <h2>Previous Value: {previousInputValue.current}</h2>
+        </>
+      );
+    }
+    //
+    // This time we use a combination of useState, useEffect, and useRef to keep track of the previous state.
+    // In the useEffect, we are updating the useRef current value each time the inputValue is updated by entering text into the input field.
+
     // 1. pass in an initial value
     // 2. access ref directly
     // 3. to access the underlying value, use the "current" property
@@ -533,169 +641,308 @@ const detail = [
     ╚██████╔╝███████║███████╗╚██████╗╚██████╔╝██║ ╚████║   ██║   ███████╗██╔╝ ██╗   ██║   
      ╚═════╝ ╚══════╝╚══════╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚══════╝╚═╝  ╚═╝   ╚═╝   
 
-    // 3 parts of a context:
-      // createContext() : defines the shared value
-      // Provider : wraps a section of your app and supplies the actual value
-      // useContext() : reads that value from any component nested inside the Provider, no matter how deep
-
-    // 1. Create the context
-    // createContext() — defines the "box" the shared value will live in. Nothing's stored yet, this just creates the mechanism.
-    const MyContext = createContext();
-
-    // 2. Provide it — wraps whatever part of the app needs access
-    function App() {
-      return (
-        // <MyContext.Provider value={...}> — wraps a section of your component tree
-        // and supplies the actual value. Anything nested inside this Provider (at any depth) can read that value.
-        <MyContext.Provider value="some shared value">
-
-          <ChildComponent />
-
-        </MyContext.Provider>
-      );
-    }
-    
-    // 3. Consume it — any nested component can read it, no matter how deep
-    function ChildComponent() {
-      // useContext(MyContext) — called inside any component nested under the Provider,
-      // this reads the current value straight out of Context — no props passed down manually,
-      // no matter how many components sit between the Provider and this one.
-      const value = useContext(MyContext);
-
-      return <p>{value}</p>;
-    }
-    
-    /*
-    <MyContext.Provider value="hello">
-      <A>                          <- doesn't need the value
-        <B>                        <- doesn't need the value either
-          <C>
-            useContext(MyContext)  <- reads "hello" directly, skips A and B entirely
-    ================================================================================
-    Without Context, "hello" would have to be passed as a prop into <A>, then <A>
-    passes it to <B>, then <B> passes it to <C> — even though A and B never actually
-    use it themselves. That's prop drilling, and it's the exact pain Context exists
-    to solve.
-    ================================================================================
-    */
-
-    // example usage
-    import { createContext, useContext, useState } from "react";
-
-    // 1. Create the context
-    // ThemeContext is created once, outside any component — this is the shared "box."
-    const ThemeContext = createContext();
-
-    // 2. Child component -- reads the value via useContext, no props needed
-    const ThemedBox = () => {
-      const themeValue = useContext(ThemeContext); // themeValue.isDark and themeValue.toggleTheme
-      const isDark = themeValue.isDark;
-      const toggleTheme = themeValue.toggleTheme;
-
-      return (
-        <div>
-          <p>Current theme label goes here</p>
-
-          // Clicking "Toggle" updates isDark in the parent, which flows back down through Context
-          // to ThemedBox, re-rendering it with the new theme — visually flipping the box's colors.
-          <button onClick={toggleTheme}>
-            Toggle
-          </button>
-
-        </div>
-      );
-    };
-
-    // 3. Parent component — creates the Provider, supplies the actual value
-    // DemoUseContext (the component your card actually renders) holds the
-    // real state (isDark) and wraps ThemedBox in the Provider, passing both
-    // the value and the updater function down as one object: { isDark, toggleTheme }
-    const DemoUseContext = () => {
-      const [isDark, setIsDark] = useState(false);
-      const toggleTheme = () => setIsDark((prev) => !prev);
-
-      return (
-        <ThemeContext.Provider value={{ isDark, toggleTheme }}>
-
-          // ThemedBox never receives any props directly — it pulls everything it needs
-          // straight out of Context with useContext(ThemeContext), then reads isDark to
-          // style itself and calls toggleTheme on click.
-          <ThemedBox />
-          
-        </ThemeContext.Provider>
-      );
-    };
-
-    export default DemoUseContext;
-
-    // use-cases:
-      // Theme (light/dark mode)
-      // Authentication / current user
-      // Language / localization
-      // Shopping cart state
-      // Form state across multi-step forms
-      // Modal/dialog visibility
-      // Feature flags / permissions
-
     // ============================================
-    // THE useContext WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // React useContext Hook
     // ============================================
     //
-    //   App.jsx
-    //      | renders <Card />
-    //      v
-    //   Card.jsx
-    //      | imports detail array
-    //      v
-    //   detailData.js
-    //      | import DemoUseContext from "../components/demos/DemoUseContext.jsx";
-    //      | ...
-    //      | { title: "useContext() React Hook", ..., demo: DemoUseContext }
-    //      v
-    //   DemoUseContext.jsx
-    //      | const ThemeContext = createContext();
-    //      | const ThemedBox = () => { useContext(ThemeContext) ... }
-    //      | const DemoUseContext = () => {
-    //      |   const [isDark, setIsDark] = useState(false);
-    //      |   return (
-    //      |     <ThemeContext.Provider value={{ isDark, toggleTheme }}>
-    //      |       <ThemedBox />
-    //      |     </ThemeContext.Provider>
-    //      |   );
-    //      | }
+    // React Context is a way to manage state globally.
+    // It can be used together with the useState Hook to share state between deeply nested components more easily than with useState alone.
     //
-    // At render time in Card.jsx:
-    //   {details.demo && <details.demo />}
-    //   -> for the useContext entry, this becomes <DemoUseContext />
-    //   -> mounts the Provider + child component together as one unit,
-    //      since the Provider has to wrap the component that consumes it
+    // THE PROBLEM
     //
-    // Difference from useState's, useEffect's, and useRef's wire:
-    //   Same exact pattern at the detailData.js/Card.jsx level
-    //   (import -> demo: field -> <details.demo />)
-    //   The only thing that changes per hook is WHICH file gets imported
-    //   and WHAT that file's internal logic does.
+    // State should be held by the highest parent component in the stack that requires access to the state.
+    // To illustrate, we have many nested components. The component at the top and bottom of the stack need access to the state.
+    // To do this without Context, we will need to pass the state as "props" through each nested component. This is called "prop drilling".
     //
-    // What's different INSIDE this one, conceptually (not the wiring, the hook itself):
-    //   useState's demo: one component, state and UI live in the same place
-    //   useEffect's demo: one component, runs on its own without user interaction
-    //   useRef's demo: one component, reaches directly into the DOM, no re-render
-    //   useContext's demo: TWO components working together —
-    //     the value lives in the PARENT (DemoUseContext),
-    //     but gets READ in the CHILD (ThemedBox) with no props passed between them
-    //   This is the first demo where the hook's whole point only shows up
-    //   because there's a parent/child split at all.
-     `,
-    tags: [
-      "createContext()",
-      "Provider",
-      "useContext()",
-      "useState()",
-      ".js data-file",
-      ".jsx demo-file",
-    ],
-    demo: DemoUseContext, // calling the component that renders a useContext(); so it can be used in the Card.jsx component
-    category: "React Hooks",
+    // Example: Passing "props" through nested components:
+    import { useState } from 'react';
+    import { createRoot } from 'react-dom/client';
+
+    // Component 1
+    function Component1() {
+      const [user, setUser] = useState("Linus");
+
+      return (
+        <>
+          <h1>{Hello "$"{user}!}</h1>
+          <Component2 user={user} />
+        </>
+      );
+    }
+
+     // Component 2
+    function Component2({ user }) {
+      return (
+        <>
+          <h1>Component 2</h1>
+          <Component3 user={user} />
+        </>
+      );
+    }
+
+     // Component 3
+    function Component3({ user }) {
+      return (
+        <>
+          <h1>Component 3</h1>
+          <h1>{Hello "$"{user} again!}</h1>
+        </>
+      );
+    }
+
+    createRoot(document.getElementById('root')).render(
+      <Component1 />
+    );
+    //
+    // Even though component 2 did not need the state, it had to pass the state along so that it could reach component 3.
+    //
+    // THE SOLUTION
+    //
+    // The solution is to create context.
+    //
+    // CREATE CONTEXT
+    //
+    // To create context, you must Import createContext and initialize it:
+    import { useState, createContext, useContext } from 'react';
+
+    const UserContext = createContext();
+    //
+    // Next we'll use the Context Provider to wrap the tree of components that need the state Context.
+    //
+    // CONTEXT PROVIDER
+    //
+    // Wrap child components in the Context Provider and supply the state value.
+    function Component1() {
+    const [user, setUser] = useState("Linus");
+
+    return (
+      <UserContext.Provider value={user}>
+        <h1>{Hello "$"{user}!}</h1>
+        <Component2 />
+      </UserContext.Provider>
+    );
+  }
+  //
+  // Now, all components in this tree will have access to the user Context.
+  //
+  // THE USECONTEXT HOOK
+  //
+  // In order to use the Context in a child component, we need to access it using the useContext Hook.
+  // First, include the useContext in the import statement:
+  import { useState, createContext, useContext } from "react";
+  //
+  // Then you can access the user Context in all components:
+  function Component3() {
+    const user = useContext(UserContext);
+
+    return (
+      <>
+        <h1>Component 3</h1>
+        <h2>{Hello "$"{user} again!}</h2>
+      </>
+    );
+  }
+  //
+  // Example: Here is the full example using React Context:
+  const UserContext = createContext();
+
+  // component 1
+  function Component1() {
+    const [user, setUser] = useState("Linus");
+
+    return (
+      <UserContext.Provider value={user}>
+        <h1>{Hello "$"{user}!}</h1>
+        <Component2 />
+      </UserContext.Provider>
+    );
+  }
+
+  // component 2
+  function Component2() {
+    return (
+      <>
+        <h1>Component 2</h1>
+        <Component3 />
+      </>
+    );
+  }
+
+  // component 3
+  function Component3() {
+    const user = useContext(UserContext);
+
+    return (
+      <>
+        <h1>Component 3</h1>
+        <h2>{Hello "$"{user} again!}</h2>
+      </>
+    );
+  }
+
+  // 3 parts of a context:
+    // createContext() : defines the shared value
+    // Provider : wraps a section of your app and supplies the actual value
+    // useContext() : reads that value from any component nested inside the Provider, no matter how deep
+
+  // 1. Create the context
+  // createContext() — defines the "box" the shared value will live in. Nothing's stored yet, this just creates the mechanism.
+  const MyContext = createContext();
+
+  // 2. Provide it — wraps whatever part of the app needs access
+  function App() {
+    return (
+      // <MyContext.Provider value={...}> — wraps a section of your component tree
+      // and supplies the actual value. Anything nested inside this Provider (at any depth) can read that value.
+      <MyContext.Provider value="some shared value">
+
+        <ChildComponent />
+
+      </MyContext.Provider>
+    );
+  }
+  
+  // 3. Consume it — any nested component can read it, no matter how deep
+  function ChildComponent() {
+    // useContext(MyContext) — called inside any component nested under the Provider,
+    // this reads the current value straight out of Context — no props passed down manually,
+    // no matter how many components sit between the Provider and this one.
+    const value = useContext(MyContext);
+
+    return <p>{value}</p>;
+  }
+  
+  /*
+  <MyContext.Provider value="hello">
+    <A>                          <- doesn't need the value
+      <B>                        <- doesn't need the value either
+        <C>
+          useContext(MyContext)  <- reads "hello" directly, skips A and B entirely
+  ================================================================================
+  Without Context, "hello" would have to be passed as a prop into <A>, then <A>
+  passes it to <B>, then <B> passes it to <C> — even though A and B never actually
+  use it themselves. That's prop drilling, and it's the exact pain Context exists
+  to solve.
+  ================================================================================
+  */
+
+  // example usage
+  import { createContext, useContext, useState } from "react";
+
+  // 1. Create the context
+  // ThemeContext is created once, outside any component — this is the shared "box."
+  const ThemeContext = createContext();
+
+  // 2. Child component -- reads the value via useContext, no props needed
+  const ThemedBox = () => {
+    const themeValue = useContext(ThemeContext); // themeValue.isDark and themeValue.toggleTheme
+    const isDark = themeValue.isDark;
+    const toggleTheme = themeValue.toggleTheme;
+
+    return (
+      <div>
+        <p>Current theme label goes here</p>
+
+        // Clicking "Toggle" updates isDark in the parent, which flows back down through Context
+        // to ThemedBox, re-rendering it with the new theme — visually flipping the box's colors.
+        <button onClick={toggleTheme}>
+          Toggle
+        </button>
+
+      </div>
+    );
+  };
+
+  // 3. Parent component — creates the Provider, supplies the actual value
+  // DemoUseContext (the component your card actually renders) holds the
+  // real state (isDark) and wraps ThemedBox in the Provider, passing both
+  // the value and the updater function down as one object: { isDark, toggleTheme }
+  const DemoUseContext = () => {
+    const [isDark, setIsDark] = useState(false);
+    const toggleTheme = () => setIsDark((prev) => !prev);
+
+    return (
+      <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+
+        // ThemedBox never receives any props directly — it pulls everything it needs
+        // straight out of Context with useContext(ThemeContext), then reads isDark to
+        // style itself and calls toggleTheme on click.
+        <ThemedBox />
+        
+      </ThemeContext.Provider>
+    );
+  };
+
+  export default DemoUseContext;
+
+  // use-cases:
+    // Theme (light/dark mode)
+    // Authentication / current user
+    // Language / localization
+    // Shopping cart state
+    // Form state across multi-step forms
+    // Modal/dialog visibility
+    // Feature flags / permissions
+
+  // ============================================
+  // THE useContext WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+  // ============================================
+  //
+  //   App.jsx
+  //      | renders <Card />
+  //      v
+  //   Card.jsx
+  //      | imports detail array
+  //      v
+  //   detailData.js
+  //      | import DemoUseContext from "../components/demos/DemoUseContext.jsx";
+  //      | ...
+  //      | { title: "useContext() React Hook", ..., demo: DemoUseContext }
+  //      v
+  //   DemoUseContext.jsx
+  //      | const ThemeContext = createContext();
+  //      | const ThemedBox = () => { useContext(ThemeContext) ... }
+  //      | const DemoUseContext = () => {
+  //      |   const [isDark, setIsDark] = useState(false);
+  //      |   return (
+  //      |     <ThemeContext.Provider value={{ isDark, toggleTheme }}>
+  //      |       <ThemedBox />
+  //      |     </ThemeContext.Provider>
+  //      |   );
+  //      | }
+  //
+  // At render time in Card.jsx:
+  //   {details.demo && <details.demo />}
+  //   -> for the useContext entry, this becomes <DemoUseContext />
+  //   -> mounts the Provider + child component together as one unit,
+  //      since the Provider has to wrap the component that consumes it
+  //
+  // Difference from useState's, useEffect's, and useRef's wire:
+  //   Same exact pattern at the detailData.js/Card.jsx level
+  //   (import -> demo: field -> <details.demo />)
+  //   The only thing that changes per hook is WHICH file gets imported
+  //   and WHAT that file's internal logic does.
+  //
+  // What's different INSIDE this one, conceptually (not the wiring, the hook itself):
+  //   useState's demo: one component, state and UI live in the same place
+  //   useEffect's demo: one component, runs on its own without user interaction
+  //   useRef's demo: one component, reaches directly into the DOM, no re-render
+  //   useContext's demo: TWO components working together —
+  //     the value lives in the PARENT (DemoUseContext),
+  //     but gets READ in the CHILD (ThemedBox) with no props passed between them
+  //   This is the first demo where the hook's whole point only shows up
+  //   because there's a parent/child split at all.
+  `,
+  tags: [
+    "createContext()",
+    "Provider",
+    "useContext()",
+    "useState()",
+    ".js data-file",
+    ".jsx demo-file",
+  ],
+  demo: DemoUseContext, // calling the component that renders a useContext(); so it can be used in the Card.jsx component
+  category: "React Hooks",
   },
   {
     title: "useMemo() React Hook",
