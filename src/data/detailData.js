@@ -7,6 +7,8 @@ import DemoUseMemo from "../components/demos/DemoUseMemo.jsx"; // the component 
 import DemoUse from "../components/demos/DemoUse.jsx"; // the component that renders a use();
 import DemoUseGSAP from "../components/demos/DemoUseGSAP.jsx"; // the component that renders a use();
 
+// source: https://www.w3schools.com/
+
 /*
 -- Notes:
   - This detailData.js isn't just a pass-through — it's the one place doing double-duty. It imports DemoUseState.jsx/DemoUseEffect.jsx at the top of the file, then stores a reference to each one on its matching array entry (demo: DemoUseState).
@@ -28,315 +30,386 @@ const detail = [
     ╚██████╔╝███████║███████╗███████║   ██║   ██║  ██║   ██║   ███████╗
      ╚═════╝ ╚══════╝╚══════╝╚══════╝   ╚═╝   ╚═╝  ╚═╝   ╚═╝   ╚══════╝
 
-      // ============================================
-      // React useState Hook
-      // ============================================
-      //
-      // State generally refers to data or properties that need to be tracking in an application.
-      //
-      // To use the useState Hook, we first need to import it into our component.
-      import { useState } from "react"; // Notice that we are destructuring useState from react as it is a named export.
-      //
-      // Initialize useState
-      // We initialize our state by calling useState in our function component.
-      // useState accepts an initial state and returns two values:
-      //  - The current state.
-      //  - A function that updates the state.
-      //
-      // Example: Initialize state at the top of the function component.
-      import { useState } from "react";
+    // ============================================
+    // React useState Hook
+    // ============================================
+    //
+    // State generally refers to data or properties that need to be tracking in an application.
+    //
+    // To use the useState Hook, we first need to import it into our component.
+    import { useState } from "react"; // Notice that we are destructuring useState from react as it is a named export.
+    //
+    // Initialize useState
+    // We initialize our state by calling useState in our function component.
+    // useState accepts an initial state and returns two values:
+    //  - The current state.
+    //  - A function that updates the state.
+    //
+    // Example: Initialize state at the top of the function component.
+    import { useState } from "react";
 
-      function FavoriteColor() {
-        const [color, setColor] = useState("red");
-      }
-      //
-      // Notice that again, we are destructuring the returned values from useState.
-      //  - The first value, color, is our current state.
-      //  - The second value, setColor, is the function that is used to update our state.
-      //  - These names are variables that can be named anything you would like.
-      //
-      // Lastly, we set the initial state to "red": useState("red")
-      //
-      // READ STATE
-      // We can now include our state anywhere in our component.
-      //
-      // Example: Use the state variable in the rendered component.
-      import { useState } from 'react';
-      import { createRoot } from 'react-dom/client';
-      //
-      function FavoriteColor() {
-        const [color, setColor] = useState("red"); // We should never directly update state. Ex: color = "blue" is not allowed.
+    function FavoriteColor() {
+      const [color, setColor] = useState("red");
+    }
+    //
+    // Notice that again, we are destructuring the returned values from useState.
+    //  - The first value, color, is our current state.
+    //  - The second value, setColor, is the function that is used to update our state.
+    //  - These names are variables that can be named anything you would like.
+    //
+    // Lastly, we set the initial state to "red": useState("red")
+    //
+    // READ STATE
+    // We can now include our state anywhere in our component.
+    //
+    // Example: Use the state variable in the rendered component.
+    import { useState } from 'react';
+    import { createRoot } from 'react-dom/client';
 
-        return <h1>My favorite color is {color}!</h1>
-      }
-      //
-      createRoot(document.getElementById('root')).render(
-        <FavoriteColor />
-      );
-      //
-      // UPDATE STATE
-      // To update our state, we use our state updater function.
-      //
-      // Example: Use the state updater function to update the state:
-      <button type="button"
-        onClick={() => setColor("blue")} // updater function
-      >
-        Blue
-      </button>
-      //
-      // WHAT CAN STATE HOLD?
-      // The useState Hook can be used to keep track of strings, numbers, booleans, arrays, objects, and any combination of these.
-      // We could create multiple state Hooks to track individual values.
-      //
-      // Example: Create multiple state Hooks:
-      function MyCar() {
-        const [brand, setBrand] = useState("Ford");
-        const [model, setModel] = useState("Mustang");
-        const [year, setYear] = useState("1964");
-        const [color, setColor] = useState("red");
-      //
-        return (
-          <>
-            <h1>My {brand}</h1>
-            <p>
-              It is a {color} {model} from {year}.
-            </p>
-          </>
-        )
-      }
-      //
-      // Or, we can just use one state and include an object instead:
-      function MyCar() {
-      const [car, setCar] = useState({
-        brand: "Ford",
-        model: "Mustang",
-        year: "1964",
-        color: "red"
-      });
-      //
+    function FavoriteColor() {
+      const [color, setColor] = useState("red"); // We should never directly update state. Ex: color = "blue" is not allowed.
+
+      return <h1>My favorite color is {color}!</h1>
+    }
+
+    createRoot(document.getElementById('root')).render(
+      <FavoriteColor />
+    );
+    //
+    // UPDATE STATE
+    // To update our state, we use our state updater function.
+    //
+    // Example: Use the state updater function to update the state:
+    <button type="button"
+      onClick={() => setColor("blue")} // updater function
+    >
+      Blue
+    </button>
+    //
+    // WHAT CAN STATE HOLD?
+    // The useState Hook can be used to keep track of strings, numbers, booleans, arrays, objects, and any combination of these.
+    // We could create multiple state Hooks to track individual values.
+    //
+    // Example: Create multiple state Hooks:
+    function MyCar() {
+      const [brand, setBrand] = useState("Ford");
+      const [model, setModel] = useState("Mustang");
+      const [year, setYear] = useState("1964");
+      const [color, setColor] = useState("red");
+
       return (
         <>
-          <h1>My {car.brand}</h1>
+          <h1>My {brand}</h1>
           <p>
-            It is a {car.color} {car.model} from {car.year}.
+            It is a {color} {model} from {year}.
           </p>
         </>
       )
     }
     //
-    // Since we are now tracking a single object: car, we need to reference that object when rendering the component. (Ex: car.brand)
-    //
-    // UPDATING OBJECTS AND ARRAYS IN STATE
-    // When state is updated, the entire state gets overwritten.
-    // What if we only want to update the color of our car?
-    // If we only called setCar({color: "blue"}), this would remove the brand, model, and year from our state.
-    // We can use the JavaScript spread operator to help us.
-    //
-    // Example: Use the JavaScript spread operator to update only the color of the car:
-    const updateColor = () => {
-      setCar(previousState => {
-        return { ...previousState, color: "blue" }
-      });
-    }
-    // Because we need the current value of state, we pass a function into our setCar function. This function receives the previous value.
-    // We then return an object, spreading the previousState and overwriting only the color.
+    // Or, we can just use one state and include an object instead:
+    function MyCar() {
+    const [car, setCar] = useState({
+      brand: "Ford",
+      model: "Mustang",
+      year: "1964",
+      color: "red"
+    });
 
-    // 1. give it an initial value (can be any javascript value)
-    // 2. that will be stored in your state variable thats returned when you call useState()
-    // 3. its returned in an array which can be destructured as 2 seperate variables
-    const [stateVariable, functionOrVariableToUpdateTheStateVariable] = useState('Initial Value');
+    return (
+      <>
+        <h1>My {car.brand}</h1>
+        <p>
+          It is a {car.color} {car.model} from {car.year}.
+        </p>
+      </>
+    )
+  }
+  //
+  // Since we are now tracking a single object: car, we need to reference that object when rendering the component. (Ex: car.brand)
+  //
+  // UPDATING OBJECTS AND ARRAYS IN STATE
+  // When state is updated, the entire state gets overwritten.
+  // What if we only want to update the color of our car?
+  // If we only called setCar({color: "blue"}), this would remove the brand, model, and year from our state.
+  // We can use the JavaScript spread operator to help us.
+  //
+  // Example: Use the JavaScript spread operator to update only the color of the car:
+  const updateColor = () => {
+    setCar(previousState => {
+      return { ...previousState, color: "blue" }
+    });
+  }
+  // Because we need the current value of state, we pass a function into our setCar function. This function receives the previous value.
+  // We then return an object, spreading the previousState and overwriting only the color.
 
-    // example usage
-    import { useState } from "react";
+  // 1. give it an initial value (can be any javascript value)
+  // 2. that will be stored in your state variable thats returned when you call useState()
+  // 3. its returned in an array which can be destructured as 2 seperate variables
+  const [stateVariable, functionOrVariableToUpdateTheStateVariable] = useState('Initial Value');
 
-    function Counter() {
-      const [count, setCount] = useState(0);
+  // example usage
+  import { useState } from "react";
 
-      return (
-        <div>
-          <p>Count: {count}</p>
-          <button onClick={() => setCount(count + 1)}>Add</button>
-        </div>
-      );
+  function Counter() {
+    const [count, setCount] = useState(0);
 
-    }
+    return (
+      <div>
+        <p>Count: {count}</p>
+        <button onClick={() => setCount(count + 1)}>Add</button>
+      </div>
+    );
 
-    // count = whatever is in useState(stored variable);
-    // its returned whenever you call usedState() as an array
-    // count = [stored variable]
-    // can be destructured as 2 seperate variables
-      // the state variable: count
-      // the function (or variable) used to update the state variable: setCount
+  }
 
-    // ============================================
-    // THE useState WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
-    // ============================================
-    //
-    //   App.jsx
-    //      | renders <Card />
-    //      v
-    //   Card.jsx
-    //      | imports detail array
-    //      v
-    //   detailData.js
-    //      | import DemoUseState from "../components/demos/DemoUseState.jsx";
-    //      | ...
-    //      | { title: "useState() React Hook", ..., demo: DemoUseState }
-    //      v
-    //   DemoUseState.jsx
-    //      | const [count, setCount] = useState(0);
-    //      | renders a button that increments count on click
-    //
-    // At render time in Card.jsx:
-    //   {details.demo && <details.demo />}
-    //   -> for the useState entry, this becomes <DemoUseState />
-    //   -> mounts the real, live counter component on the page
-     `,
-    tags: [
-      "useState()",
-      ".js data-file",
-      ".jsx demo-file",
-      "stored variables",
-      "stored functions",
-    ],
-    demo: DemoUseState, // calling the component that renders a useState(); so it can be used in the Card.jsx component
-    category: "React Hooks",
+  // count = whatever is in useState(stored variable);
+  // its returned whenever you call usedState() as an array
+  // count = [stored variable]
+  // can be destructured as 2 seperate variables
+    // the state variable: count
+    // the function (or variable) used to update the state variable: setCount
+
+  // ============================================
+  // THE useState WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+  // ============================================
+  //
+  //   App.jsx
+  //      | renders <Card />
+  //      v
+  //   Card.jsx
+  //      | imports detail array
+  //      v
+  //   detailData.js
+  //      | import DemoUseState from "../components/demos/DemoUseState.jsx";
+  //      | ...
+  //      | { title: "useState() React Hook", ..., demo: DemoUseState }
+  //      v
+  //   DemoUseState.jsx
+  //      | const [count, setCount] = useState(0);
+  //      | renders a button that increments count on click
+  //
+  // At render time in Card.jsx:
+  //   {details.demo && <details.demo />}
+  //   -> for the useState entry, this becomes <DemoUseState />
+  //   -> mounts the real, live counter component on the page
+  `,
+  tags: [
+    "useState()",
+    ".js data-file",
+    ".jsx demo-file",
+    "stored variables",
+    "stored functions",
+  ],
+  demo: DemoUseState, // calling the component that renders a useState(); so it can be used in the Card.jsx component
+  category: "React Hooks",
   },
   {
-    title: "useEffect() React Hook",
-    description:
-      "This hook is used to perform side-effects in react. It lets you synchronize with a system outside of react and is asynchronous. useEffect lets a component 'step outside' normal rendering to do something that isn't about what's on screen — things like starting a timer, subscribing to an event, fetching data, or syncing with something outside React (the DOM, browser APIs, a server). It runs automatically after render, and re-runs whenever the values in its dependency array change — so instead of the user triggering something (like a click or typing in a form field), the effect triggers itself in response to state/props changing, or once on mount if the dependency array is empty. Types of effects include: event based side effects (i.e. button click, filling out a form field) and render-based side effects (i.e. fetching data) - runs after render. You can use this hook when you need to sync your react code with a browser api. useEffect is a broad tool for lots of side effects (timers, subscriptions, DOM syncing, event listeners).",
-    example: `
-    ██╗   ██╗███████╗███████╗███████╗███████╗███████╗███████╗ ██████╗████████╗
-    ██║   ██║██╔════╝██╔════╝██╔════╝██╔════╝██╔════╝██╔════╝██╔════╝╚══██╔══╝
-    ██║   ██║███████╗█████╗  █████╗  █████╗  █████╗  █████╗  ██║        ██║
-    ██║   ██║╚════██║██╔══╝  ██╔══╝  ██╔══╝  ██╔══╝  ██╔══╝  ██║        ██║
-    ╚██████╔╝███████║███████╗███████╗██║     ██║     ███████╗╚██████╗   ██║
-     ╚═════╝ ╚══════╝╚══════╝╚══════╝╚═╝     ╚═╝     ╚══════╝ ╚═════╝   ╚═╝
+  title: "useEffect() React Hook",
+  description:
+    "This hook is used to perform side-effects in react. It lets you synchronize with a system outside of react and is asynchronous. useEffect lets a component 'step outside' normal rendering to do something that isn't about what's on screen — things like starting a timer, subscribing to an event, fetching data, or syncing with something outside React (the DOM, browser APIs, a server). It runs automatically after render, and re-runs whenever the values in its dependency array change — so instead of the user triggering something (like a click or typing in a form field), the effect triggers itself in response to state/props changing, or once on mount if the dependency array is empty. Types of effects include: event based side effects (i.e. button click, filling out a form field) and render-based side effects (i.e. fetching data) - runs after render. You can use this hook when you need to sync your react code with a browser api. useEffect is a broad tool for lots of side effects (timers, subscriptions, DOM syncing, event listeners).",
+  example: `
+  ██╗   ██╗███████╗███████╗███████╗███████╗███████╗███████╗ ██████╗████████╗
+  ██║   ██║██╔════╝██╔════╝██╔════╝██╔════╝██╔════╝██╔════╝██╔════╝╚══██╔══╝
+  ██║   ██║███████╗█████╗  █████╗  █████╗  █████╗  █████╗  ██║        ██║
+  ██║   ██║╚════██║██╔══╝  ██╔══╝  ██╔══╝  ██╔══╝  ██╔══╝  ██║        ██║
+  ╚██████╔╝███████║███████╗███████╗██║     ██║     ███████╗╚██████╗   ██║
+    ╚═════╝ ╚══════╝╚══════╝╚══════╝╚═╝     ╚═╝     ╚══════╝ ╚═════╝   ╚═╝
 
-    // 1. give use effect a function to run - by default, it will run after each render
-    // 2. to change that behavior, you can give it a dependancies array
-    // 3. whan any value in this array changes,the effect function will run
-    // 4. when it changes or an action is taken it will be updated in state which, will cause the effect to run and update
-    // 5. useEffect (like every React hook) can only be called from inside a function component or a custom hook. React will throw an error if you dont.
+  // ============================================
+  // React useState Hook
+  // ============================================
+  //
+  // The useEffect Hook allows you to perform side effects in your components.
+  // Some examples of side effects are: fetching data, directly updating the DOM, and timers.
+  // useEffect accepts two arguments. The second argument is optional.
+  useEffect(<function>, <dependency>)
+  //
+  // Example: Use setTimeout() to count 1 second after initial render:
+  import { useState, useEffect } from 'react';
+  import { createRoot } from 'react-dom/client';
+  //
+  function Timer() {
+    const [count, setCount] = useState(0);
+
     useEffect(() => {
-      // code that runs here is your actual effect (fetch data, start a timer, subscribe to something, etc.)
-    }, [someValue]); // dependency array controls when the effect re-runs:
-              // [] (empty) → runs once, right after the component first renders
-              // [someValue] → runs once after first render, then again anytime someValue changes
-              // no array at all → runs after every render, no matter what changed (rarely what you want)
-              // [] = only run when these specific things change
+      setTimeout(() => {
+        setCount((count) => count + 1);
+      }, 1000);
+    }); // <- add empty brackets here to make the effect run once on initial render
 
-    // example usage - no dependancy array
-    import { useState, useEffect } from "react";
+    return <h1>I've rendered {count} times!</h1>;
+  }
 
-    function Clock() {
-      const [time, setTime] = useState(new Date()); // useState(new Date()) — holds the current time as state, starting at "right now."
+  createRoot(document.getElementById('root')).render(
+    <Timer />
+  );
+  //
+  // But wait!! It keeps counting even though it should only count once!
+  //
+  // useEffect runs on every render. That means that when the count changes, a render happens, which then triggers another effect.
+  // This is not what we want. There are several ways to control when side effects run.
+  // We should always include the second parameter which accepts an array. We can optionally pass dependencies to useEffect in this array.
+  //
+  // Example 1: No dependency passed:
+    useEffect(() => {
+    //Runs on every render
+  });
+  //
+  // Example 2: An empty array:
+    useEffect(() => {
+    //Runs only on the first render
+  }, []);
+  //
+  // Example 3: Props or state values:
+    useEffect(() => {
+    //Runs on the first render
+    //And any time any dependency value changes
+  }, [prop, state]);
+  //
+  // Example: Here is an example of a useEffect Hook that is dependent on a variable. If the count variable updates, the effect will run again:
+  function Counter() {
+    const [count, setCount] = useState(0);
+    const [calculation, setCalculation] = useState(0);
 
-      useEffect(() => { // useEffect(() => { ... }, []) — runs once, right after the component first renders (empty dependency array).
+    useEffect(() => {
+      setCalculation(() => count * 2);
+    }, [count]); // <- add the count variable here
 
-        // the effect running in this case
-        const interval = setInterval(() => { // setInterval(() => setTime(new Date()), 1000) — every 1000ms (1 second), updates time to the current moment.
-          setTime(new Date()); // each setTime call triggers a re-render, so the displayed time visibly ticks forward.
-        }, 1000);
+    return (
+      <>
+        <p>Count: {count}</p>
+        <button onClick={() => setCount((c) => c + 1)}>+</button>
+        <p>Calculation: {calculation}</p>
+      </>
+    );
+  }
+  //
+  // If there are multiple dependencies, they should be included in the useEffect dependency array.
 
-        return () => clearInterval(interval); // cleanup
-        // return () => clearInterval(interval) — this is the cleanup function. When the component unmounts
-            // (gets removed from the page), React calls this automatically to stop the interval — otherwise
-            // the timer would keep running in the background forever, even after the clock's no longer on screen.
-            // This return-a-cleanup-function pattern is unique to useEffect and one of the most important things to understand about it.
+  // 1. give use effect a function to run - by default, it will run after each render
+  // 2. to change that behavior, you can give it a dependancies array
+  // 3. whan any value in this array changes,the effect function will run
+  // 4. when it changes or an action is taken it will be updated in state which, will cause the effect to run and update
+  // 5. useEffect (like every React hook) can only be called from inside a function component or a custom hook. React will throw an error if you dont.
+  useEffect(() => {
+    // code that runs here is your actual effect (fetch data, start a timer, subscribe to something, etc.)
+  }, [someValue]); // dependency array controls when the effect re-runs:
+            // [] (empty) → runs once, right after the component first renders
+            // [someValue] → runs once after first render, then again anytime someValue changes
+            // no array at all → runs after every render, no matter what changed (rarely what you want)
+            // [] = only run when these specific things change
 
-      }, []); // end useEffect
+  // example usage - no dependancy array
+  import { useState, useEffect } from "react";
 
-      return (
-          <p>
-            Current Time: <span className="font-mono">{time.toLocaleTimeString()}</span>
-            // time.toLocaleTimeString() — formats the Date object into a readable time string like 2:31:12 PM
-          </p>
-      );
+  function Clock() {
+    const [time, setTime] = useState(new Date()); // useState(new Date()) — holds the current time as state, starting at "right now."
 
-    }
+    useEffect(() => { // useEffect(() => { ... }, []) — runs once, right after the component first renders (empty dependency array).
 
-    // example usage - with dependancy array
-    import { useState, useEffect } from "react";
+      // the effect running in this case
+      const interval = setInterval(() => { // setInterval(() => setTime(new Date()), 1000) — every 1000ms (1 second), updates time to the current moment.
+        setTime(new Date()); // each setTime call triggers a re-render, so the displayed time visibly ticks forward.
+      }, 1000);
 
-    function VehicleSearch() {
-      // Every time the user types a new character in the input field, setMake: 
-        // updates state →
-        // component re-renders →
-        // React compares the new make value to the one from the last render →
-        // since it changed, the effect runs again with the new value.
-      
-      // If make hasn't changed between renders (say, some unrelated state updated instead),
-        // React skips re-running the effect — that's the whole point of the dependency array
-      const [make, setMake] = useState("");
-      const [results, setResults] = useState([]);
+      return () => clearInterval(interval); // cleanup
+      // return () => clearInterval(interval) — this is the cleanup function. When the component unmounts
+          // (gets removed from the page), React calls this automatically to stop the interval — otherwise
+          // the timer would keep running in the background forever, even after the clock's no longer on screen.
+          // This return-a-cleanup-function pattern is unique to useEffect and one of the most important things to understand about it.
 
-      useEffect(() => {
-        console.log('Searching for vehicles matching: {make}'); // the effect running in this case
-        // e.g. fetch('/api/vehicles?make={make}').then(...)
-      }, [make]); // re-run this effect any time [make] changes, not just once on mount.
+    }, []); // end useEffect
 
-      /*
-        One rule to keep in mind going forward:
-        any state or prop your effect actually uses inside its function body should generally be listed in the dependency array.
-        If you use make inside the effect but leave it out of [], React (and most linters, including your ESLint setup) will warn
-        you — the effect would keep reading a "stale" value of make from whenever it first ran, instead of the current one.
-      */
+    return (
+        <p>
+          Current Time: <span className="font-mono">{time.toLocaleTimeString()}</span>
+          // time.toLocaleTimeString() — formats the Date object into a readable time string like 2:31:12 PM
+        </p>
+    );
 
-      return (
-        <div>
-          <input
-            value={make}
-            onChange={(e) => setMake(e.target.value)}
-            placeholder="Search by make..."
-          />
-          <p>Results for: {make}</p>
-        </div>
-      );
-    }
+  }
+
+  // example usage - with dependancy array
+  import { useState, useEffect } from "react";
+
+  function VehicleSearch() {
+    // Every time the user types a new character in the input field, setMake: 
+      // updates state →
+      // component re-renders →
+      // React compares the new make value to the one from the last render →
+      // since it changed, the effect runs again with the new value.
     
-    // ============================================
-    // THE useEffect WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
-    // ============================================
-    //
-    //   App.jsx
-    //      | renders <Card />
-    //      v
-    //   Card.jsx
-    //      | imports detail array
-    //      v
-    //   detailData.js
-    //      | import DemoUseEffect from "../components/demos/DemoUseEffect.jsx";
-    //      | ...
-    //      | { title: "useEffect() React Hook", ..., demo: DemoUseEffect }
-    //      v
-    //   DemoUseEffect.jsx
-    //      | const [time, setTime] = useState(new Date());
-    //      | useEffect(() => {
-    //      |   const interval = setInterval(() => setTime(new Date()), 1000);
-    //      |   return () => clearInterval(interval); // cleanup
-    //      | }, []);
-    //
-    // At render time in Card.jsx:
-    //   {details.demo && <details.demo />}
-    //   -> for the useEffect entry, this becomes <DemoUseEffect />
-    //   -> mounts the real, live ticking clock component on the page
-    //
-    // Difference from useState's wire:
-    //   Same exact pattern (import -> demo: field -> <details.demo />)
-    //   The only thing that changes per hook is WHICH file gets imported
-    //   and WHAT that file's internal logic does.
-     `,
-    tags: [
-      "useEffect()",
-      "useState()",
-      ".js data-file",
-      ".jsx demo-file",
-      "stored functions",
-    ],
-    demo: DemoUseEffect, // calling the component that renders a useEffect(); so it can be used in the Card.jsx component
-    category: "React Hooks",
+    // If make hasn't changed between renders (say, some unrelated state updated instead),
+      // React skips re-running the effect — that's the whole point of the dependency array
+    const [make, setMake] = useState("");
+    const [results, setResults] = useState([]);
+
+    useEffect(() => {
+      console.log('Searching for vehicles matching: {make}'); // the effect running in this case
+      // e.g. fetch('/api/vehicles?make={make}').then(...)
+    }, [make]); // re-run this effect any time [make] changes, not just once on mount.
+
+    /*
+      One rule to keep in mind going forward:
+      any state or prop your effect actually uses inside its function body should generally be listed in the dependency array.
+      If you use make inside the effect but leave it out of [], React (and most linters, including your ESLint setup) will warn
+      you — the effect would keep reading a "stale" value of make from whenever it first ran, instead of the current one.
+    */
+
+    return (
+      <div>
+        <input
+          value={make}
+          onChange={(e) => setMake(e.target.value)}
+          placeholder="Search by make..."
+        />
+        <p>Results for: {make}</p>
+      </div>
+    );
+  }
+  
+  // ============================================
+  // THE useEffect WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+  // ============================================
+  //
+  //   App.jsx
+  //      | renders <Card />
+  //      v
+  //   Card.jsx
+  //      | imports detail array
+  //      v
+  //   detailData.js
+  //      | import DemoUseEffect from "../components/demos/DemoUseEffect.jsx";
+  //      | ...
+  //      | { title: "useEffect() React Hook", ..., demo: DemoUseEffect }
+  //      v
+  //   DemoUseEffect.jsx
+  //      | const [time, setTime] = useState(new Date());
+  //      | useEffect(() => {
+  //      |   const interval = setInterval(() => setTime(new Date()), 1000);
+  //      |   return () => clearInterval(interval); // cleanup
+  //      | }, []);
+  //
+  // At render time in Card.jsx:
+  //   {details.demo && <details.demo />}
+  //   -> for the useEffect entry, this becomes <DemoUseEffect />
+  //   -> mounts the real, live ticking clock component on the page
+  //
+  // Difference from useState's wire:
+  //   Same exact pattern (import -> demo: field -> <details.demo />)
+  //   The only thing that changes per hook is WHICH file gets imported
+  //   and WHAT that file's internal logic does.
+  `,
+  tags: [
+    "useEffect()",
+    "useState()",
+    ".js data-file",
+    ".jsx demo-file",
+    "stored functions",
+  ],
+  demo: DemoUseEffect, // calling the component that renders a useEffect(); so it can be used in the Card.jsx component
+  category: "React Hooks",
   },
   {
     title: "useRef() React Hook",
