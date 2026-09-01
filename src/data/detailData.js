@@ -3,6 +3,7 @@ import DemoUseState from "../components/demos/DemoUseState.jsx"; // the componen
 import DemoUseEffect from "../components/demos/DemoUseEffect.jsx"; // the component that renders a useEffect();
 import DemoUseRef from "../components/demos/DemoUseRef.jsx"; // the component that renders a useRef();
 import DemoUseContext from "../components/demos/DemoUseContext.jsx"; // the component that renders a useContext();
+import DemoUseMemo from "../components/demos/DemoUseMemo.jsx"; // the component that renders a useMemo();
 
 /*
 -- Notes:
@@ -338,7 +339,7 @@ const detail = [
     category: "React Hooks",
   },
   {
-    title: "useState() React Hook",
+    title: "useContext() React Hook",
     description:
       "useContext lets a component read a value from a shared 'Context' without needing that value passed down as a prop through every component in between — it's React's built-in solution for prop drilling, the problem where a value needed by a deeply nested component has to be manually threaded through every intermediate component that doesn't actually use it itself, just to relay it downward. A Context has three parts: createContext() (defines the shared value), a Provider (wraps a section of your app and supplies the actual value), and useContext() (reads that value from any component nested inside the Provider, no matter how deep).",
     example: `
@@ -511,6 +512,130 @@ const detail = [
       ".jsx demo-file",
     ],
     demo: DemoUseContext, // calling the component that renders a useContext(); so it can be used in the Card.jsx component
+    category: "React Hooks",
+  },
+  {
+    title: "useMemo() React Hook",
+    description:
+      "useMemo caches the result of an expensive calculation between renders, so it doesn't get recomputed every single time the component re-renders — only when the specific values it depends on actually change. It's a performance optimization, not a data-storage tool like useState or useRef: you give it a function and a dependency array, and it returns the cached value, recalculating only when something in that array changes. with the React Compiler now stable, a lot of the manual memoization useMemo was traditionally used for gets handled automatically by the compiler — meaning in a React 19 project using the compiler, you'll reach for useMemo by hand far less often than in pre-compiler codebases. That said, it's still essential to understand — most real-world codebases you'll work in aren't fully on the compiler yet, it still shows up constantly in job interviews and existing code, and there are cases (like memoizing values used outside of rendering, e.g. as a dependency for another hook) where you still need it explicitly even with the compiler enabled.",
+    example: `
+    ██╗   ██╗███████╗███████╗███╗   ███╗███████╗███╗   ███╗ ██████╗ 
+    ██║   ██║██╔════╝██╔════╝████╗ ████║██╔════╝████╗ ████║██╔═══██╗
+    ██║   ██║███████╗█████╗  ██╔████╔██║█████╗  ██╔████╔██║██║   ██║
+    ██║   ██║╚════██║██╔══╝  ██║╚██╔╝██║██╔══╝  ██║╚██╔╝██║██║   ██║
+    ╚██████╔╝███████║███████╗██║ ╚═╝ ██║███████╗██║ ╚═╝ ██║╚██████╔╝
+     ╚═════╝ ╚══════╝╚══════╝╚═╝     ╚═╝╚══════╝╚═╝     ╚═╝ ╚═════╝ 
+
+    // 1. takes two arguments:
+        // a function that returns a value,
+        // and a dependency array (same concept as useEffect's dependency array).
+
+    // 2. The function runs and its return value gets cached.
+
+    // 3. On every re-render, React checks: did anything in [dependencies] change since last time?
+        // If no — React skips re-running the function entirely and just hands back the cached value from before.
+        // If yes — it re-runs the function and caches the new result.
+
+    // 4. Unlike useEffect, useMemo's function must return something — that returned value is what
+        // the hook itself evaluates to, used directly in your render output (not a side effect happening off to the side).
+    useMemo(() => {...}, [dependencies])
+
+    function Example({ items }) {
+      const result = useMemo(() => {
+        return expensiveCalculation(items);
+      }, [items]);
+
+      return <div>{result}</div>;
+    }
+
+    // example usage
+    import { useState, useMemo } from "react";
+
+    function ShoppingCart({ items }) {
+      const [count, setCount] = useState(0);
+
+      const total = useMemo(() => {
+        // adding up prices is a genuinely common, realistic calculation
+        return items.reduce((sum, item) => sum + item.price, 0);
+      }, [items]); // the total only recalculates when the items array itself changes (something added/removed from the cart).
+
+      return (
+        <div>
+          <p>Total: $'{total}'</p>
+
+          /*
+            Clicking the counter button changes count, which re-renders the component — but since items didn't change,
+            useMemo skips recalculating total and just reuses the cached value. Skip recalculation when the dependency hasn't changed.
+          */
+          <button onClick={() => setCount(count + 1)}>Clicked {count} times</button>
+        </div>
+      );
+    }
+
+    
+
+    /*
+      The core question useMemo answers is: "is this calculation expensive enough that recalculating
+      it on every single render would actually slow things down?" — if the calculation is cheap
+      (like adding two numbers), useMemo isn't worth the overhead of tracking dependencies; it earns
+      its place when the calculation itself is genuinely costly (sorting/filtering a large array, heavy math, etc.).
+    */
+
+    // ============================================
+    // THE useMemo WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // ============================================
+    //
+    //   App.jsx
+    //      | renders <Card />
+    //      v
+    //   Card.jsx
+    //      | imports detail array
+    //      v
+    //   detailData.js
+    //      | import DemoUseMemo from "../components/demos/DemoUseMemo.jsx";
+    //      | ...
+    //      | { title: "useMemo() React Hook", ..., demo: DemoUseMemo }
+    //      v
+    //   DemoUseMemo.jsx
+    //      | const slowSum = (num) => { ... 500 million loop iterations ... }
+    //      | const [number, setNumber] = useState(1);
+    //      | const [unrelatedCount, setUnrelatedCount] = useState(0);
+    //      | const total = useMemo(() => slowSum(number), [number]);
+    //      | <button onClick={() => setNumber(number + 1)}>Increase Number</button>
+    //      | <button onClick={() => setUnrelatedCount(unrelatedCount + 1)}>Increase Unrelated Count</button>
+    //
+    // At render time in Card.jsx:
+    //   {details.demo && <details.demo />}
+    //   -> for the useMemo entry, this becomes <DemoUseMemo />
+    //   -> mounts two buttons: one that visibly triggers the slow recalculation,
+    //      one that re-renders the component but skips it entirely
+    //
+    // Difference from useState's, useEffect's, useRef's, and useContext's wire:
+    //   Same exact pattern at the detailData.js/Card.jsx level
+    //   (import -> demo: field -> <details.demo />)
+    //   The only thing that changes per hook is WHICH file gets imported
+    //   and WHAT that file's internal logic does.
+    //
+    // What's different INSIDE this one, conceptually (not the wiring, the hook itself):
+    //   useState's demo: state changes -> UI updates every time, on purpose
+    //   useEffect's demo: runs on its own, automatically, no click needed
+    //   useRef's demo: no re-render at all, direct DOM access
+    //   useContext's demo: value lives in a parent, read in a child, no props between them
+    //   useMemo's demo: TWO state values exist side by side specifically so you can
+    //     compare what happens when a re-render is triggered by something the memoized
+    //     value DOES depend on (slow) vs. something it DOESN'T depend on (instant) —
+    //     the hook's entire point only becomes visible by having that unrelated state
+    //     to contrast against.
+     `,
+    tags: [
+      "useMemo()",
+      "useState()",
+      ".js data-file",
+      ".jsx demo-file",
+      "stored variables",
+      "stored functions",
+    ],
+    demo: DemoUseMemo, // calling the component that renders a useMemo(); so it can be used in the Card.jsx component
     category: "React Hooks",
   },
 ];
