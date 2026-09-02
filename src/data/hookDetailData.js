@@ -436,12 +436,12 @@ const detail = [
     // It can be used to store a mutable value that does not cause a re-render when updated.
     // It can be used to access a DOM element directly.
     //
-    DOES NOT CAUSE RE-RENDERS
+    // DOES NOT CAUSE RE-RENDERS
     //
     // If we tried to count how many times our application renders using the useState Hook, we would be caught in an infinite loop since this Hook itself causes a re-render.
     // To avoid this, we can use the useRef Hook.
     //
-    Example: Use useRef to track application renders.
+    // Example: Use useRef to track application renders.
     import { useState, useRef, useEffect } from 'react';
     import { createRoot } from 'react-dom/client';
 
@@ -2522,43 +2522,6 @@ const detail = [
   demo: DemoUseCallback, // calling the component that renders a useCallback(); so it can be used in the Card.jsx component
   category: "React Hooks",
   },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   {
     title: "() React Hook",
     description:

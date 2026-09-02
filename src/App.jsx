@@ -32,6 +32,7 @@
 // import layout
 // import components
 import HookCard from "./components/HookCard.jsx";
+import CoreCard from "./components/CoreCard.jsx";
 
 const App = () => {
   // add javascript
@@ -44,6 +45,7 @@ const App = () => {
         {/* main content of the page */}
         <main>
           <HookCard />
+          <CoreCard />
         </main>
         
       </div>
