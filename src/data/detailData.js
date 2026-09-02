@@ -6,6 +6,7 @@ import DemoUseContext from "../components/demos/DemoUseContext.jsx"; // the comp
 import DemoUseMemo from "../components/demos/DemoUseMemo.jsx"; // the component that renders a useMemo();
 import DemoUse from "../components/demos/DemoUse.jsx"; // the component that renders a use();
 import DemoUseGSAP from "../components/demos/DemoUseGSAP.jsx"; // the component that renders a use();
+import DemoUseReducer from "../components/demos/DemoUseReducer.jsx"; // the component that renders a use();
 
 // source: https://www.w3schools.com/
 
@@ -1478,6 +1479,276 @@ const detail = [
     ],
     demo: DemoUseGSAP, // calling the component that renders a useGSAP(); so it can be used in the Card.jsx component
     category: "React Hooks",
+  },
+  {
+    title: "useReducer() React Hook",
+    description:
+      "useReducer is an alternative to useState for managing more complex state logic — instead of calling a setter directly, you dispatch an action (a plain object describing what happened), and a reducer function decides how state should change in response. It shines when: multiple pieces of related state need to update together, the next state depends on the previous state in a non-trivial way, or you have many possible state transitions (think a form with several fields, or a shopping cart with add/remove/update-quantity actions) — condensing what would be several useState calls and scattered update logic into one predictable, centralized function.",
+    example: `
+    ██╗   ██╗███████╗███████╗██████╗ ███████╗██████╗ ██╗   ██╗ ██████╗███████╗██████╗ 
+    ██║   ██║██╔════╝██╔════╝██╔══██╗██╔════╝██╔══██╗██║   ██║██╔════╝██╔════╝██╔══██╗
+    ██║   ██║███████╗█████╗  ██████╔╝█████╗  ██║  ██║██║   ██║██║     █████╗  ██████╔╝
+    ██║   ██║╚════██║██╔══╝  ██╔══██╗██╔══╝  ██║  ██║██║   ██║██║     ██╔══╝  ██╔══██╗
+    ╚██████╔╝███████║███████╗██║  ██║███████╗██████╔╝╚██████╔╝╚██████╗███████╗██║  ██║
+    ╚═════╝ ╚══════╝╚══════╝╚═╝  ╚═╝╚══════╝╚═════╝  ╚═════╝  ╚═════╝╚══════╝╚═╝  ╚═╝                   
+
+    // ============================================
+    // React useReducer() Hook
+    // ============================================
+    //
+    // The useReducer Hook is similar to the useState Hook.
+    // It allows for custom state logic.
+    // If you find yourself keeping track of multiple pieces of state that rely on complex logic, useReducer may be useful.
+    //
+    // SYNTAX
+    //
+    // The useReducer Hook accepts three arguments.
+    useReducer(reducer, initialState, init)
+    //
+    // The reducer function contains your custom state logic and the initialStatecan be a simple value, but generally will contain an object.
+    // The init argument is optional and is used to initialize the state.
+    // The useReducer Hook returns the current stateand a dispatchmethod.
+    //
+    // Example: Here is an example where we use useReducer to keep track of the score of two players:
+    import { useReducer } from 'react';
+    import { createRoot } from 'react-dom/client';
+
+    const initialScore = [
+      {
+        id: 1,
+        score: 0,
+        name: "John",
+      },
+      {
+        id: 2,
+        score: 0,
+        name: "Sally",
+      },
+    ];
+
+    const reducer = (state, action) => {
+      switch (action.type) {
+        case "INCREASE":
+          return state.map((player) => {
+            if (player.id === action.id) {
+              return { ...player, score: player.score + 1 };
+            } else {
+              return player;
+            }
+          });
+        default:
+          return state;
+      }
+    };
+
+    function Score() {
+      const [score, dispatch] = useReducer(reducer, initialScore);
+
+      const handleIncrease = (player) => {
+        dispatch({ type: "INCREASE", id: player.id });
+      };
+
+      return (
+        <>
+          {score.map((player) => (
+            <div key={player.id}>
+              <label>
+                <input
+                  type="button"
+                  onClick={() => handleIncrease(player)}
+                  value={player.name}
+                />
+                {player.score}
+              </label>
+            </div>
+          ))}
+        </>
+      );
+    }
+
+    createRoot(document.getElementById('root')).render(
+      <Score />
+    );
+
+    // BASIC PATTERN
+    import { useReducer } from "react";
+
+    const initialState = { /* starting state shape */ };
+
+    /*
+      reducer(state, action) — a plain function, defined outside the component (doesn't need to be,
+      but it's a common convention since it doesn't depend on anything inside the component).
+      Takes the current state and an action, returns the new state. Never mutates state
+      directly — always returns a new object (same immutability rule as useState).
+    */
+    function reducer(state, action) {
+
+      /*
+        action — a plain object, conventionally shaped { type: "SOME_ACTION", payload: ... }.
+        The type tells the reducer which case to run; payload (optional) carries any data
+        needed to compute the new state.
+      */
+      switch (action.type) {
+        case "SOME_ACTION":
+          return { ...state /* updated fields */ };
+        default:
+          return state;
+      }
+    }
+
+    function Example() {
+
+      /*
+        useReducer(reducer, initialState) — takes the reducer function and a starting state,
+        returns an array of two things: the current state, and a dispatch function.
+      */
+      const [state, dispatch] = useReducer(reducer, initialState);
+
+      return <div>...</div>;
+    }
+    //
+    // dispatch({ type: "SOME_ACTION" }) — calling this is how you trigger a state change.
+    // Instead of calling a setter directly (like setCount(count + 1)), you describe what
+    // happened (dispatch({ type: "INCREMENT" })), and the reducer decides how state should respond.
+    //
+    // Side-by-side comparison with useState, since that's the natural comparison:
+    //
+    // useState — direct, simple
+    const [count, setCount] = useState(0);
+    setCount(count + 1);
+    //
+    // useReducer — describes an event, reducer decides the update
+    const [state, dispatch] = useReducer(reducer, { count: 0 });
+    dispatch({ type: "INCREMENT" });
+    //
+    // For a single simple value like a counter, useState is genuinely simpler and the right choice
+    // — useReducer earns its place once state gets complex enough that centralizing the update logic
+    // in one place (rather than scattering setter calls throughout the component) actually pays off.
+
+    // ============================================
+    // THE useReducer WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // ============================================
+    //
+    //   App.jsx
+    //      | renders <Card />
+    //      v
+    //   Card.jsx
+    //      | imports detail array
+    //      v
+    //   detailData.js
+    //      | import DemoUseReducer from "../components/demos/DemoUseReducer.jsx";
+    //      | ...
+    //      | { title: "useReducer() React Hook", ..., demo: DemoUseReducer }
+    //      v
+    //   DemoUseReducer.jsx
+    //      | const initialState = { count: 0 };
+    //      | function reducer(state, action) {
+    //      |   switch (action.type) {
+    //      |     case "INCREMENT": return { count: state.count + 1 };
+    //      |     case "DECREMENT": return { count: state.count - 1 };
+    //      |     case "RESET": return { count: 0 };
+    //      |     default: return state;
+    //      |   }
+    //      | }
+    //      | const [state, dispatch] = useReducer(reducer, initialState);
+    //      | <button onClick={() => dispatch({ type: "DECREMENT" })}>-</button>
+    //      | <button onClick={() => dispatch({ type: "INCREMENT" })}>+</button>
+    //      | <button onClick={() => dispatch({ type: "RESET" })}>Reset</button>
+    //
+    // At render time in Card.jsx:
+    //   {details.demo && <details.demo />}
+    //   -> for the useReducer entry, this becomes <DemoUseReducer />
+    //   -> mounts a counter with three buttons, each dispatching a
+    //      different action to the same centralized reducer function
+    //
+    // Difference from every other hook's wire so far:
+    //   Same exact pattern at the detailData.js/Card.jsx level
+    //   (import -> demo: field -> <details.demo />)
+    //   The only thing that changes per hook is WHICH file gets imported
+    //   and WHAT that file's internal logic does.
+    //
+    // What's different INSIDE this one, conceptually (not the wiring, the hook itself):
+    //   useState's demo: one setter, one direct update, one job
+    //   useReducer's demo: THREE different actions (dispatch calls), but only
+    //     ONE function (reducer) that owns all the logic for how state responds
+    //     to each of them. The component's click handlers never touch state
+    //     directly — they just describe WHAT happened (the action), and the
+    //     reducer decides HOW state should change. This separation — event
+    //     description vs. state-transition logic — is the entire reason
+    //     useReducer exists over useState once state gets complex enough.
+
+  `,
+  tags: [
+    "useReducer()",
+    "useState",
+    ".js data-file",
+    ".jsx demo-file",
+  ],
+  demo: DemoUseReducer, // calling the component that renders a useReducer(); so it can be used in the Card.jsx component
+  category: "React Hooks",
+  },
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  {
+    title: "() React Hook",
+    description:
+      "",
+    example: `
+    ███╗   ██╗███████╗██╗    ██╗
+    ████╗  ██║██╔════╝██║    ██║
+    ██╔██╗ ██║█████╗  ██║ █╗ ██║
+    ██║╚██╗██║██╔══╝  ██║███╗██║
+    ██║ ╚████║███████╗╚███╔███╔╝
+    ╚═╝  ╚═══╝╚══════╝ ╚══╝╚══╝                      
+
+    // ============================================
+    // React Hook
+    // ============================================
+    //
+    
+  `,
+  tags: [
+    "()",
+    ".js data-file",
+    ".jsx demo-file",
+  ],
+  demo: DemoUseState, // calling the component that renders a (); so it can be used in the Card.jsx component
+  category: "React Hooks",
   },
 ];
 
