@@ -31,7 +31,7 @@
 
 // import layout
 // import components
-import Card from "./components/Card.jsx";
+import HookCard from "./components/HookCard.jsx";
 
 const App = () => {
   // add javascript
@@ -43,7 +43,7 @@ const App = () => {
 
         {/* main content of the page */}
         <main>
-          <Card />
+          <HookCard />
         </main>
         
       </div>

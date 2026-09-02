@@ -1,6 +1,6 @@
 
 // import the data from the detail array in detailData.js
-import detail from "../data/detailData.js"
+import hookDetail from "../data/hookDetailData.js"
 
 // import dependancies
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";// react-syntax-highlighter
@@ -21,7 +21,7 @@ const Card = () => {
           {/* card */}
           {/* mapping over the detail array and naming each individual item "details" */}
           {/* map through the array and display content for each item in the array */}
-          {detail.map((details, key) => (
+          {hookDetail.map((details, key) => (
             <div key={key} className="p-6 rounded-lg border border-amber-200 bg-amber-100">
 
                 {/* card content */}
