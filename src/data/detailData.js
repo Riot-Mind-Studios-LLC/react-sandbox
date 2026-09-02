@@ -7,6 +7,7 @@ import DemoUseMemo from "../components/demos/DemoUseMemo.jsx"; // the component 
 import DemoUse from "../components/demos/DemoUse.jsx"; // the component that renders a use();
 import DemoUseGSAP from "../components/demos/DemoUseGSAP.jsx"; // the component that renders a use();
 import DemoUseReducer from "../components/demos/DemoUseReducer.jsx"; // the component that renders a use();
+import DemoCustomHook from "../components/demos/DemoCustomHook.jsx"; // the component that renders a use();
 
 // source: https://www.w3schools.com/
 
@@ -1685,6 +1686,247 @@ const detail = [
     ".jsx demo-file",
   ],
   demo: DemoUseReducer, // calling the component that renders a useReducer(); so it can be used in the Card.jsx component
+  category: "React Hooks",
+  },
+  {
+    title: "customHook() React Hook",
+    description:
+      "Custom hooks are just regular JavaScript functions that start with use and can call other hooks inside them (useState, useEffect, useRef, etc.). They exist to solve one specific problem: when the same piece of stateful logic is needed in multiple components, you'd otherwise have to copy-paste that logic (and its state, effects, everything) into every component that needs it. A custom hook lets you extract that logic into one reusable function instead — each component that calls it gets its own independent copy of that state/behavior, but the code for how it works lives in exactly one place.",
+    example: `
+    ██████╗██╗   ██╗███████╗████████╗ ██████╗ ███╗   ███╗
+    ██╔════╝██║   ██║██╔════╝╚══██╔══╝██╔═══██╗████╗ ████║
+    ██║     ██║   ██║███████╗   ██║   ██║   ██║██╔████╔██║
+    ██║     ██║   ██║╚════██║   ██║   ██║   ██║██║╚██╔╝██║
+    ╚██████╗╚██████╔╝███████║   ██║   ╚██████╔╝██║ ╚═╝ ██║
+    ╚═════╝ ╚═════╝ ╚══════╝   ╚═╝    ╚═════╝ ╚═╝     ╚═╝                 
+
+    // ============================================
+    // React custom() Hook
+    // ============================================
+    //
+    // When you have components that can be used by multiple components, we can extract that component into a custom Hook.
+    // Custom Hooks start with "use". Example: useFetch.
+    //
+    // BUILD A HOOK
+    //
+    // First, let us make an example without a custom Hook.
+    // In the following code, we are fetching data from a URL and displaying it.
+    // We will use the JSONPlaceholder service to fetch some fake data.
+    // 
+    // Example: Use the JSONPlaceholder service to fetch some fake titles and display them:
+    import { useState, useEffect } from 'react';
+    import { createRoot } from 'react-dom/client';
+
+    const Home = () => {
+      const [data, setData] = useState(null);
+
+      useEffect(() => {
+        fetch("https://jsonplaceholder.typicode.com/todos")
+          .then((res) => res.json())
+          .then((data) => setData(data));
+    }, []);
+
+      return (
+        <>
+          {data &&
+            data.map((item) => {
+              return <p key={item.id}>{item.title}</p>;
+            })}
+        </>
+      );
+    };
+
+    createRoot(document.getElementById('root')).render(
+      <Home />
+    );
+    //
+    // The logic behind the fetch may be needed in other components as well, so we will turn that into a custom Hook.
+    // Move the fetch logic to a new file to be used as a custom Hook.
+    // The file name must start with use, and end with .js, and be placed in the same directory as the component.
+    // We will name the file useFetch.js.
+    //
+    // Example: Move the fetch component into the new file:
+    // useFetch.js
+    import { useState, useEffect } from "react";
+
+    const useFetch = (url) => {
+      const [data, setData] = useState(null);
+
+      useEffect(() => {
+        fetch(url)
+          .then((res) => res.json())
+          .then((data) => setData(data));
+      }, [url]);
+
+      return [data];
+    };
+
+    export default useFetch;
+    //
+    // Now we can import this Hook, and use it in any other component:
+    //
+    // Example: Import and use the newly created custom Hook:
+    // main.jsx
+    import { createRoot } from 'react-dom/client';
+    import useFetch from "./useFetch";
+
+    const Home = () => {
+      const [data] = useFetch("https://jsonplaceholder.typicode.com/todos");
+
+      return (
+        <>
+          {data &&
+            data.map((item) => {
+              return <p key={item.id}>{item.title}</p>;
+            })}
+        </>
+      );
+    };
+
+    createRoot(document.getElementById('root')).render(
+      <Home />
+    );
+    //
+    // We have created a new file called useFetch.js containing a function called useFetch which contains all of the logic needed to fetch our data.
+    // We removed the hard-coded URL and replaced it with a url variable that can be passed to the custom Hook.
+    // Lastly, we are returning our data from our Hook.
+    // In main.jsx, we are importing our useFetch Hook and utilizing it like any other Hook. This is where we pass in the URL to fetch data from.
+    // Now we can reuse this custom Hook in any component to fetch data from any URL.
+    //
+    // The use prefix isn't just convention — it's how React and linters know a function is allowed to call other hooks inside it.
+    // A regular helper function calling useState internally would break the Rules of Hooks; naming it useSomething is what makes that legal.
+    // They don't share state between components — each component that calls a custom hook gets its own independent state. It's the logic that's shared/reused, not the actual data.
+    // They can return anything — a single value, an array (like useState does), an object with multiple named values (like your useTheme likely does), or even nothing at all.
+
+    // a custom hook is just a regular function, named starting with "use",
+    // that calls other hooks inside it
+
+    function useSomething() {
+      const [value, setValue] = useState(initialValue);
+
+      // any logic, effects, refs, etc. can live in here
+
+      return value; // can return one value, an array, an object — whatever makes sense
+    }
+
+    // used inside a component exactly like a built-in hook
+    function Example() {
+      const value = useSomething();
+      return <div>{value}</div>;
+    }
+
+    // A slightly more complete shape, showing a common pattern — returning multiple values:
+    function useToggle(initialValue = false) {
+      const [value, setValue] = useState(initialValue);
+
+      const toggle = () => setValue((prev) => !prev);
+
+      return { value, toggle };   // returning an object — lets the caller destructure by name
+    }
+
+    // used in a component:
+    function Example() {
+      const { value, toggle } = useToggle();
+
+      return (
+        <button onClick={toggle}>
+          {value ? "ON" : "OFF"}
+        </button>
+      );
+    }
+    
+    /*
+      The core idea to hold onto: everything inside useToggle — the useState call,
+      the toggle function — is completely ordinary hook/state logic. The only thing
+      that makes it a "custom hook" rather than just a component is that it doesn't
+      return JSX; it returns data and functions that a component then uses to build its own JSX.
+    */
+
+    /* use cases:
+        - Sharing stateful logic across multiple components
+          — the core reason custom hooks exist. Your own useTheme (Panther Tracker) is a real example: theme state
+          - and a toggle function, needed by multiple components, written once.
+        - Toggles/booleans
+          — modals, dropdowns, accordions, sidebars, any open/closed or on/off state, exactly like the useToggle demo.
+        - Form field logic
+          — managing a single input's value, validation state, and change handler as one reusable unit, so a form with many
+          - fields doesn't repeat the same three lines of useState + onChange per field.
+        - Data fetching
+          — a useFetch(url) hook that wraps useState (for data/loading/error) + useEffect (to trigger the fetch) into one
+          - reusable call, instead of rewriting that same loading/error/data pattern in every component that needs to hit an
+          - API (this is almost exactly the shape of the ProductList example from your REST/Fetch cheat-sheet, just extracted into a hook).
+        - Window/browser APIs
+          — things like useWindowSize() (tracks viewport width/height on resize) or useLocalStorage(key) (syncs a piece of state with
+          - localStorage automatically) — wrapping a browser API + useEffect into a clean, reusable interface.
+        - Debouncing/throttling input
+          — a useDebounce(value, delay) hook that delays updating a value until the user stops typing for a moment
+          — common for search-as-you-type inputs, so you're not firing an API call on every keystroke.
+        - Media queries / responsive logic
+          — a useMediaQuery("(max-width: 768px)") hook that returns a boolean tracking whether a media query currently matches, letting
+          - components conditionally render based on screen size without manually wiring up matchMedia + useEffect every time.
+        - Previous value tracking — a usePrevious(value) hook (built on useRef, tying back to what you learned there)
+          - that remembers what a value was on the last render, useful for comparing "did this actually change" logic.
+        *** The common thread across all of these: any time you notice yourself about to copy-paste a useState + useEffect (or useRef) combo
+          ** into a second component, that's the signal a custom hook belongs there instead.
+    */
+
+    // ============================================
+    // THE Custom Hook (useToggle) WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // ============================================
+    //
+    //   App.jsx
+    //      | renders <Card />
+    //      v
+    //   Card.jsx
+    //      | imports detail array
+    //      v
+    //   detailData.js
+    //      | import DemoCustomHook from "../components/demos/DemoCustomHook.jsx";
+    //      | ...
+    //      | { title: "Custom Hooks (useToggle example)", ..., demo: DemoCustomHook }
+    //      v
+    //   DemoCustomHook.jsx
+    //      | import useToggle from "../../hooks/useToggle.js";
+    //      | const light1 = useToggle();
+    //      | const light2 = useToggle(true);
+    //      | <button onClick={light1.toggle}>Toggle</button>
+    //      | <button onClick={light2.toggle}>Toggle</button>
+    //      v
+    //   useToggle.js                              <-- NEW LAYER, not seen in any hook wire before this one
+    //      | function useToggle(initialValue = false) {
+    //      |   const [value, setValue] = useState(initialValue);
+    //      |   const toggle = () => setValue((prev) => !prev);
+    //      |   return { value, toggle };
+    //      | }
+    //
+    // At render time in Card.jsx:
+    //   {details.demo && <details.demo />}
+    //   -> for the custom hook entry, this becomes <DemoCustomHook />
+    //   -> which itself calls useToggle() TWICE, creating two fully independent
+    //      instances of the same reusable logic
+    //
+    // Difference from every other hook's wire so far:
+    //   Every previous demo called a BUILT-IN React hook directly
+    //   (useState, useEffect, useRef, etc. — imported straight from "react").
+    //   This is the FIRST wire with an extra layer in between: the demo component
+    //   doesn't call useState directly at all — it calls useToggle(), a hook
+    //   YOU wrote, which is the one actually calling useState() underneath.
+    //
+    // What's different INSIDE this one, conceptually (not the wiring, the hook itself):
+    //   Every other demo taught what ONE hook call does.
+    //   This demo calls the SAME custom hook TWICE (light1, light2) specifically
+    //   to prove the core payoff of custom hooks: the LOGIC is written once
+    //   (inside useToggle.js), but every call gets its own fully independent
+    //   state — toggling light1 never touches light2, even though both are
+    //   running off the exact same function.
+    
+  `,
+  tags: [
+    "customHook()",
+    ".js data-file",
+    ".jsx demo-file",
+  ],
+  demo: DemoCustomHook, // calling the component that renders a customHook(); so it can be used in the Card.jsx component
   category: "React Hooks",
   },
 
