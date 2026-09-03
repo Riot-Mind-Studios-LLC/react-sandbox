@@ -1,6 +1,8 @@
 // import components
 import DemoPropDrilling from "../components/demos/DemoPropDrilling.jsx"; // the component that renders the demo;
 import DemoConditionalRendering from "../components/demos/DemoConditionalRendering.jsx"; // the component that renders the demo;
+import DemoListsKeys from "../components/demos/DemoListsKeys.jsx"; // the component that renders the demo;
+import DemoControlledUncontrolled from "../components/demos/DemoControlledUncontrolled.jsx"; // the component that renders the demo;
 
 // source: https://www.w3schools.com/
 
@@ -266,15 +268,16 @@ const detail = [
 
     // ============================================
     // THE Props & Prop Drilling WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // (updated to reflect the CoreCard.jsx / coreDetailData.js split)
     // ============================================
     //
     //   App.jsx
-    //      | renders <Card />
+    //      | renders <CoreCard />
     //      v
-    //   Card.jsx
+    //   CoreCard.jsx
     //      | imports detail array
     //      v
-    //   detailData.js
+    //   coreDetailData.js
     //      | import DemoPropDrilling from "../components/demos/DemoPropDrilling.jsx";
     //      | ...
     //      | { title: "Props & Prop Drilling", ..., demo: DemoPropDrilling }
@@ -288,20 +291,22 @@ const detail = [
     //      |   return ( ...owns user... <Level1 user={user} /> );
     //      | }
     //
-    // At render time in Card.jsx:
+    // At render time in CoreCard.jsx:
     //   {details.demo && <details.demo />}
     //   -> for the props/prop-drilling entry, this becomes <DemoPropDrilling />
     //   -> mounts four visually nested boxes, showing the same "user" value
     //      being passed down three layers before finally being used
     //
     // Difference from every other card's wire so far:
-    //   Same exact pattern at the detailData.js/Card.jsx level
-    //   (import -> demo: field -> <details.demo />)
-    //   The only thing that changes per card is WHICH file gets imported
-    //   and WHAT that file's internal logic does.
+    //   Same overall shape, but this card now routes through the split
+    //   structure: CoreCard.jsx + coreDetailData.js, not the original single
+    //   Card.jsx + detailData.js. All hook cards (useState through useCallback)
+    //   still route through the separate HookCard.jsx + hookDetailData.js pair —
+    //   the two phases now live in fully separate card/data pairs, both
+    //   rendered together by App.jsx.
     //
     // What's different INSIDE this one, conceptually (not the wiring, the concept itself):
-    //   This is the FIRST card in the registry that isn't a hook at all — no
+    //   This is the first card in the registry that isn't a hook at all — no
     //   useState, useEffect, useRef, or any React hook is used anywhere in this
     //   demo. It's pure component composition and prop-passing — proving that
     //   React's most fundamental data-flow mechanism (props) doesn't require
@@ -487,15 +492,16 @@ const detail = [
 
     // ============================================
     // THE Conditional Rendering WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // (updated to reflect the CoreCard.jsx / coreDetailData.js split)
     // ============================================
     //
     //   App.jsx
-    //      | renders <Card />
+    //      | renders <CoreCard />
     //      v
-    //   Card.jsx
+    //   CoreCard.jsx
     //      | imports detail array
     //      v
-    //   detailData.js
+    //   coreDetailData.js
     //      | import DemoConditionalRendering from "../components/demos/DemoConditionalRendering.jsx";
     //      | ...
     //      | { title: "Conditional Rendering", ..., demo: DemoConditionalRendering }
@@ -508,20 +514,22 @@ const detail = [
     //      | <p>Count is: {count && count}</p>                                 // broken "0" gotcha
     //      | <p>Count is: {count > 0 ? count : "zero, rendered correctly"}</p>   // fixed version
     //
-    // At render time in Card.jsx:
+    // At render time in CoreCard.jsx:
     //   {details.demo && <details.demo />}
     //   -> for the conditional rendering entry, this becomes <DemoConditionalRendering />
     //   -> mounts three toggleable buttons and four stacked examples of the
     //      same underlying state rendered through different conditional patterns
     //
     // Difference from every other card's wire so far:
-    //   Same exact pattern at the detailData.js/Card.jsx level
-    //   (import -> demo: field -> <details.demo />)
-    //   The only thing that changes per card is WHICH file gets imported
-    //   and WHAT that file's internal logic does.
+    //   Same overall shape, but this card now routes through the split
+    //   structure: CoreCard.jsx + coreDetailData.js, not the original single
+    //   Card.jsx + detailData.js. All hook cards (useState through useCallback)
+    //   still route through the separate HookCard.jsx + hookDetailData.js pair —
+    //   the two phases now live in fully separate card/data pairs, both
+    //   rendered together by App.jsx.
     //
     // What's different INSIDE this one, conceptually (not the wiring, the concept itself):
-    //   This is the SECOND non-hook card in the registry (after Props & Prop
+    //   This is the second non-hook card in the registry (after Props & Prop
     //   Drilling) — again, no custom hook logic is the point here, just plain
     //   useState paired with JS expressions. It's also the first demo that
     //   deliberately shows a BROKEN version side by side with a FIXED version
@@ -535,6 +543,492 @@ const detail = [
     "logic"
   ],
   demo: DemoConditionalRendering, // calling the component that renders the concept; so it can be used in the CoreCard.jsx component
+  category: "Core React",
+  },
+  {
+    title: "Core Concepts: Lists & Keys ",
+    description:
+      "Lists in React are typically rendered using .map() — you already know this cold, since it's literally the mechanism your entire Card.jsx is built on (detail.map((details, key) => (...))). Given an array of data, .map() transforms each item into a piece of JSX, and the resulting array of JSX elements is what actually gets rendered to the page. Keys are a special prop React requires on every element produced inside a .map() — a unique identifier, per item, that lets React track which specific item is which across re-renders. Without a stable key, if the underlying array changes (an item gets added, removed, or reordered), React can't reliably tell which rendered element corresponds to which piece of data anymore — it falls back to comparing by position instead, which can cause real bugs: form inputs holding onto the wrong values, animations firing on the wrong element, or component state getting mixed up between items after a reorder. The one gotcha worth flagging immediately, since it's extremely common: using the array index as the key (arr.map((item, index) => <div key={index}>) works fine for lists that never reorder, get filtered, or have items added/removed from the middle — but breaks exactly the scenarios keys exist to protect against, the moment the list becomes dynamic. The correct key is a value that's stable and unique to that specific piece of data — usually an id field from the data itself, not its position in the array.",
+    example: `
+    ██╗     ██╗███████╗████████╗███████╗        ██╗    ██╗  ██╗███████╗██╗   ██╗███████╗
+    ██║     ██║██╔════╝╚══██╔══╝██╔════╝       ██╔╝    ██║ ██╔╝██╔════╝╚██╗ ██╔╝██╔════╝
+    ██║     ██║███████╗   ██║   ███████╗      ██╔╝     █████╔╝ █████╗   ╚████╔╝ ███████╗
+    ██║     ██║╚════██║   ██║   ╚════██║     ██╔╝      ██╔═██╗ ██╔══╝    ╚██╔╝  ╚════██║
+    ███████╗██║███████║   ██║   ███████║    ██╔╝       ██║  ██╗███████╗   ██║   ███████║
+    ╚══════╝╚═╝╚══════╝   ╚═╝   ╚══════╝    ╚═╝        ╚═╝  ╚═╝╚══════╝   ╚═╝   ╚══════╝           
+
+    // ============================================
+    // React Core: Lists & Keys
+    // ============================================
+    // 
+    // In React, you will render lists with some type of loop.
+    // The JavaScript map() array method is generally the preferred method.
+    //
+    // Example: a simple list using the map() method:
+    function MyCars() {
+        const cars = ['Ford', 'BMW', 'Audi']; // the name of the array is called cars
+
+        return (
+            <>
+            <h1>My Cars:</h1>
+            <ul>
+                // map the cars array
+                // every item in the array can be targeted using the keyword: car
+                // this will return every item in the array as a list item
+                {cars.map((car) => <li>I am a { car }</li>)}
+            </ul>
+            </>
+        );
+    }
+    //
+    // When you run this code in your React environment, it will work but you will
+    // receive a warning that there is no "key" provided for the list items.
+    //
+    // KEYS IN REACT LISTS
+    //
+    /*
+        Keys allow React to keep track of elements. This way, if an item is updated or
+        removed, only that item will be re-rendered instead of the entire list.
+
+        Keys must be unique among siblings, but they don't have to be unique across the entire application.
+
+        Generally, the key should be a unique ID assigned to each item. As a last resort,
+        you can use the array index as a key.
+    */
+   //
+   // Example: Here the example from above, with keys:
+   function MyCars() {
+
+        const cars = [
+            {id: 1001, brand: 'Ford'},
+            {id: 1002, brand: 'BMW'},
+            {id: 1003, brand: 'Audi'}
+        ];
+
+        return (
+            <>
+            <h1>My Cars:</h1>
+            <ul>
+                {cars.map((car) => <li key={car.id}>I am a { car.brand }</li>)}
+            </ul>
+            </>
+        );
+
+    }
+    //
+    // USING ARRAY INDEX AS KEYS
+    //
+    // While it's possible to use the array index as a key, it's not recommended unless:
+        // The list is static (won't change)
+        // The list will never be reordered or filtered
+        // The items in the list have no IDs
+    //
+    // Example: Using array indexes as keys (not recommended for dynamic lists):
+    function MyCars() {
+        const cars = ['Ford', 'BMW', 'Audi'];
+
+        return (
+            <>
+            <h1>My Cars:</h1>
+            <ul>
+                // using the index keyword in the map, grabs the index position of items in the array
+                // then you can just reference the keyword in the key fot the li
+                {cars.map((car, index) => <li key={index}>I am a { car }</li>)}
+            </ul>
+            </>
+        );
+
+    }
+    
+    // Basic patterns
+    const items = [
+    { id: 1, name: "Sticker Pack" },
+    { id: 2, name: "Vanity Plate" },
+    { id: 3, name: "Snapback Hat" },
+    ];
+
+    function List() {
+        return (
+            <ul>
+                {items.map((item) => ( // runs once per array item, returning a piece of JSX for each li
+
+                // key={item.id} goes on the outermost element returned by .map(), not somewhere buried inside it.
+                // React reads this prop specially — it's never passed down to the component itself
+                // as a real prop, it's consumed entirely by React's own internal tracking.
+                // item.id, not the map's index — this is the "stable and unique to the data" key discussed a moment ago.
+                    <li key={item.id}>{item.name}</li>
+                    
+                ))}
+            </ul>
+        );
+    }
+    
+    // Side-by-side: the common mistake vs. the correct version:
+
+    // WRONG — using the array index as the key
+    // works fine for a static list, but breaks if items are reordered/filtered/inserted —
+    // React ends up matching the WRONG rendered element to the wrong data after a change
+    {items.map((item, index) => (
+        <li key={index}>{item.name}</li>
+    ))}
+
+    // CORRECT — using a stable, unique value FROM the data itself
+    {items.map((item) => (
+        <li key={item.id}>{item.name}</li>
+    ))}
+    
+    /*
+        What if the data genuinely has no unique id? Sometimes true for static, hardcoded lists — in that
+        case, a value that's actually unique per item (even a combination of fields) is still better than
+        the index, but generating a real id at the data source (a database, an API, or crypto.randomUUID()
+        when creating the item is the correct long-term fix, not a workaround.
+    */
+
+    /* use cases:
+        - Rendering any array of data as UI — the single most common pattern in React, full stop: product lists,
+          blog posts, comments, search results, navigation menus, table rows — anywhere a collection of similar
+          items needs to become a collection of similar components.
+
+        - Your own Card.jsx — worth naming directly, since it's the clearest example you have: every single
+          card in this entire sandbox app exists because of detail.map((details, key) => ...). This whole project
+          has been a live, ongoing lists-and-keys demo the entire time, even before this card formalized it.
+
+        - Dynamic, editable lists — todo apps, shopping carts, form field arrays (adding/removing rows) — anywhere
+          items can be added, removed, or reordered by the user, which is exactly the scenario where correct keys
+          stop being optional and start being load-bearing (as your demo just proved).
+
+        - Rendering tags/chips/pills — your own details.tags.map((tag, key) => ...) pattern used throughout every card's tag section.
+
+        - Table rows — mapping an array of records into <tr> elements, each needing a stable key tied to a record's actual ID, not its row position.
+
+        - Nested lists — a list of categories, each containing a list of items within it — requires careful key
+          uniqueness at each level of nesting, since a key only needs to be unique among its immediate siblings, not globally unique across the whole app.
+
+        - Generated form fields — dynamically rendering a form's inputs from a config array (similar in spirit to
+          your own maintenanceTypes, reminderTypes, partCategories dropdown data) rather than hand-writing each input.
+
+        - The common thread, and the real lesson underneath this whole card: keys aren't a React formality to silence
+          a console warning — they're how React knows what "the same thing" means across two renders. Your demo made
+          that concrete: the checkbox didn't move because of some quirky bug, it moved because index-based keys told
+          React "item 0 is still item 0," which was simply false the moment the list's order changed.
+    */
+
+    // ============================================
+    // THE Lists & Keys WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // ============================================
+    //
+    //   App.jsx
+    //      | renders <CoreCard />
+    //      v
+    //   CoreCard.jsx
+    //      | imports detail array
+    //      v
+    //   coreDetailData.js
+    //      | import DemoListsKeys from "../components/demos/DemoListsKeys.jsx";
+    //      | ...
+    //      | { title: "Lists & Keys", ..., demo: DemoListsKeys }
+    //      v
+    //   DemoListsKeys.jsx
+    //      | const ListItem = ({ label }) => { const [isChecked, setIsChecked] = useState(false); ... }
+    //      | const [items, setItems] = useState(initialItems);
+    //      | const removeFirst = () => setItems(items.slice(1));
+    //      | {items.map((item, index) => <ListItem key={index} label={item.name} />)}   // buggy
+    //      | {items.map((item) => <ListItem key={item.id} label={item.name} />)}          // correct
+    //
+    // At render time in CoreCard.jsx:
+    //   {details.demo && <details.demo />}
+    //   -> for the lists & keys entry, this becomes <DemoListsKeys />
+    //   -> mounts two parallel lists (index-keyed vs. id-keyed) with a shared
+    //      "Remove First Item" trigger, so checkbox state visibly desyncs in
+    //      one list and stays correctly attached in the other
+    //
+    // Difference from every other card's wire so far:
+    //   Same overall shape as before, but this is the FIRST card to route
+    //   through the NEW split structure: CoreCard.jsx + coreDetailData.js,
+    //   instead of the original single Card.jsx + detailData.js. Every hook
+    //   card (useState through useCallback) still routes through the ORIGINAL
+    //   HookCard.jsx + hookDetailData.js pairing — the two phases now live
+    //   in fully separate card/data pairs, both rendered together by App.jsx.
+    //
+    // What's different INSIDE this one, conceptually (not the wiring, the concept itself):
+    //   This is the first demo with a component (ListItem) that holds ITS OWN
+    //   independent state (isChecked) and gets rendered TWICE, side by side,
+    //   from the same source array — once with a fragile key strategy, once
+    //   with a correct one. Every earlier list-like pattern in this registry
+    //   (the .map() over "detail" itself, tags.map()) used stable, unique keys
+    //   without ever demonstrating what breaks when that's NOT the case. This
+    //   is the first card to make the failure mode itself the demo.
+  `,
+  tags: [
+    ".map()",
+    "objects",
+    "arrays",
+    "prop",
+    "lists",
+    "keys",
+    "index",
+    "loop"
+  ],
+  demo: DemoListsKeys, // calling the component that renders the concept; so it can be used in the CoreCard.jsx component
+  category: "Core React",
+  },
+  {
+    title: "Core Concepts: Controlled v Uncontrolled Components",
+    description:
+      "Controlled components are form inputs (<input>, <textarea>, <select>) whose value is driven entirely by React state — the input's value comes from a state variable, and every keystroke updates that state via onChange, which then re-renders the input with the new value. React is the single source of truth for what the input currently holds. Uncontrolled components are the opposite — the input manages its own value internally, the way a plain HTML form always has, and React only reaches in to read the current value when it actually needs it (usually via a ref, tying directly back to your useRef card), rather than tracking every keystroke as it happens.",
+    example: `
+    ██████╗ ██████╗ ███╗   ██╗████████╗██████╗  ██████╗ ██╗     ██╗     ███████╗██████╗     ██╗   ██╗
+    ██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗██║     ██║     ██╔════╝██╔══██╗    ██║   ██║
+    ██║     ██║   ██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║██║     ██║     █████╗  ██║  ██║    ██║   ██║
+    ██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║██║     ██║     ██╔══╝  ██║  ██║    ╚██╗ ██╔╝
+    ╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║╚██████╔╝███████╗███████╗███████╗██████╔╝     ╚████╔╝ 
+     ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝╚══════╝╚═════╝       ╚═══╝                                                                                              
+            
+    ██╗   ██╗███╗   ██╗ ██████╗ ██████╗ ███╗   ██╗████████╗██████╗  ██████╗ ██╗     ██╗     ███████╗██████╗ 
+    ██║   ██║████╗  ██║██╔════╝██╔═══██╗████╗  ██║╚══██╔══╝██╔══██╗██╔═══██╗██║     ██║     ██╔════╝██╔══██╗
+    ██║   ██║██╔██╗ ██║██║     ██║   ██║██╔██╗ ██║   ██║   ██████╔╝██║   ██║██║     ██║     █████╗  ██║  ██║
+    ██║   ██║██║╚██╗██║██║     ██║   ██║██║╚██╗██║   ██║   ██╔══██╗██║   ██║██║     ██║     ██╔══╝  ██║  ██║
+    ╚██████╔╝██║ ╚████║╚██████╗╚██████╔╝██║ ╚████║   ██║   ██║  ██║╚██████╔╝███████╗███████╗███████╗██████╔╝
+     ╚═════╝ ╚═╝  ╚═══╝ ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚══════╝╚══════╝╚══════╝╚═════╝ 
+                
+    ██████╗ ██████╗ ███╗   ███╗██████╗  ██████╗ ███╗   ██╗███████╗███╗   ██╗████████╗███████╗
+    ██╔════╝██╔═══██╗████╗ ████║██╔══██╗██╔═══██╗████╗  ██║██╔════╝████╗  ██║╚══██╔══╝██╔════╝
+    ██║     ██║   ██║██╔████╔██║██████╔╝██║   ██║██╔██╗ ██║█████╗  ██╔██╗ ██║   ██║   ███████╗
+    ██║     ██║   ██║██║╚██╔╝██║██╔═══╝ ██║   ██║██║╚██╗██║██╔══╝  ██║╚██╗██║   ██║   ╚════██║
+    ╚██████╗╚██████╔╝██║ ╚═╝ ██║██║     ╚██████╔╝██║ ╚████║███████╗██║ ╚████║   ██║   ███████║
+     ╚═════╝ ╚═════╝ ╚═╝     ╚═╝╚═╝      ╚═════╝ ╚═╝  ╚═══╝╚══════╝╚═╝  ╚═══╝   ╚═╝   ╚══════╝
+                                                                                          
+    // ================================================
+    // React Core: COntrolled v Uncontrolled Components
+    // ================================================
+    //
+    // Just like in HTML, React uses forms to allow users to interact with the web page.
+    // You add a form with React like any other element
+    //
+    // Example: You add a form with React like any other element:
+    function MyForm() {
+        return (
+            <form>
+                <label>Enter your name:
+                    <input type="text" />
+                </label>
+            </form>
+        )
+    }
+    //
+    // This will work as normal, the form will submit and the page will refresh.
+    // But this is generally not what we want to happen in React.
+    // We want to prevent this default behavior and let React control the form.
+
+    // HTML FORMS VS. REACT FORMS
+    //
+    // In React, form elements like <input>, <textarea>, and <select> work a bit differently from traditional HTML.
+    // In standard HTML, form elements maintain their own value based on user input.
+    // For example, an <input type="text"> field keeps track of its own value in the HTML DOM.
+    //
+    // In React, the value of the form element is kept in the component's state property and updated only with the setState() function.
+    // In other words; React provides a way to manage form data through component state, leading to what are known as "controlled components."
+
+    // CONTROLLED COMPONENTS
+    //
+    // In a controlled component, form data is handled by the React component.
+    // The value of the input element is driven by the React state, and any changes to that value are managed through event handlers that update the state.
+    // When the data is handled by the components, all the data is stored in the component state.
+    // We can use the useState Hook to keep track of each input value and provide a "single source of truth" for the entire application.
+    //
+    // Example: Use the useState Hook to manage the input:
+
+    // 1. Import the useState Hook from React:
+    import { useState } from 'react';
+    import { createRoot } from 'react-dom/client';
+
+    function MyForm() {
+        // 2. Declare a state variable to hold the input's value and a function to update it:
+        const [name, setName] = useState("");
+
+        // 3. Create a function to handle the change event:
+        function handleChange(e) {
+            setName(e.target.value);
+        }
+
+        return (
+            <form>
+
+                <label>Enter your name:
+                    // 4. Set the value of the input field to the state variable and the onChange attribute to handle the change event:
+                    <input
+                    type="text" 
+                    value={name}
+                    onChange={handleChange}
+                    />
+                </label>
+
+                // 5. Display the current value to show that the value is being updated:
+                <p>Current value: {name}</p>
+
+            </form>
+        )
+    }
+
+    createRoot(document.getElementById('root')).render(
+    <MyForm />
+    );
+
+    // INITIAL VALUES
+    // To add an initial value to the input field in the example above, add a value to the useState object:
+    //
+    // Example: Use initial value for name:
+    function MyForm() {
+        const [name, setName] = useState("John");
+    ...
+
+    // Basic patterns:
+
+    // Controlled component
+    function ControlledExample() {
+        const [name, setName] = useState("");
+
+        return (
+            <input
+            value={name} // React state drives what's shown
+            onChange={(e) => setName(e.target.value)} // every keystroke updates state
+            />
+        );
+    }
+
+    // Uncontrolled component
+    function UncontrolledExample() {
+        const inputRef = useRef(null);
+
+        const handleSubmit = () => {
+            console.log(inputRef.current.value); // read the value only when needed, not on every keystroke
+        };
+
+        return (
+            <>
+            <input ref={inputRef} defaultValue="" />
+            <button onClick={handleSubmit}>Submit</button>
+            </>
+        );
+    }
+
+    /* The pieces, broken down:
+        - Controlled: value={name} is what makes this controlled — React is explicitly telling the
+          input what to display, every render. onChange is required alongside it — without it,
+          the input would be stuck permanently displaying whatever name currently is, since nothing
+          would ever update state to reflect what the user types (React would actually warn you about
+          this exact mistake: a value prop with no onChange handler).
+
+        - Uncontrolled: defaultValue (not value) sets the starting value only — after that, the DOM
+          owns it entirely, and React doesn't re-render or know anything changed until inputRef.current.value
+          is explicitly read.
+
+        - The onChange requirement is the tell: if you see value on an input with no onChange, that's either a
+        bug, or an intentionally read-only controlled input (which needs a readOnly attribute to be valid,
+        since React will otherwise complain).
+    */
+
+    // One more real distinction worth knowing — checkboxes/radios use checked, not value, for controlled state:
+    <input
+        type="checkbox"
+        checked={isChecked}
+        onChange={(e) => setIsChecked(e.target.checked)}
+    />
+
+    /* use cases
+        - Live validation as the user types — showing an error message, a strength meter, or a checkmark the moment
+          input becomes valid/invalid, rather than waiting until submission — requires controlled inputs, since React
+          needs to see every keystroke to react to it.
+
+        - Formatting input as it's typed — auto-inserting dashes in a phone number, forcing uppercase (like the demo),
+          auto-capitalizing names, limiting character count with a live counter — all controlled patterns, same
+          mechanism as the demo's uppercase transform.
+
+        - Conditionally enabling/disabling a submit button — disabling submit until all required fields are
+          filled or valid, checked continuously as state changes.
+
+        - Syncing one field based on another — a "confirm password" field that live-compares against the "password"
+          field, or a state dropdown that filters based on a selected country — needs both fields' current values
+          accessible as state, not locked away in the DOM.
+
+        - Search-as-you-type inputs — tied directly back to your REST/Fetch cheat-sheet's AbortController
+          example — a search box firing a new query on every keystroke needs the current value as state to
+          trigger effects/fetches off of.
+
+        - Simple forms with no live behavior — a basic contact form that's only read once, at submission — a solid case
+          for uncontrolled inputs, since there's no benefit to re-rendering on every keystroke if nothing needs to
+          react to it in real time. This is the honest use case for uncontrolled, not just controlled.
+
+        - File inputs — this one's worth calling out specifically: <input type="file"> is always uncontrolled in React —
+          you cannot set its value programmatically for security reasons (a webpage isn't allowed to silently populate
+          a file input with an arbitrary file path). This ties directly to your own real code — your Panther Tracker
+          photoInputRef had to be uncontrolled by necessity, not by choice.
+
+        - Integrating with non-React code/libraries — a third-party widget or plain JS library that expects to manage
+          its own input directly often works more smoothly left uncontrolled, read via ref only when React
+          actually needs the value.
+
+        - The real judgment call this card teaches: controlled is the right default for most real form work, since
+          almost every practical form eventually needs some live behavior (validation, formatting, cross-field logic) —
+          but uncontrolled has genuine, non-workaround use cases too, especially file inputs and simple submit-once
+          forms, rather than being purely "the old/wrong way" of doing things.
+    */
+
+    // ============================================
+    // THE Controlled vs. Uncontrolled Components WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // ============================================
+    //
+    //   App.jsx
+    //      | renders <CoreCard />
+    //      v
+    //   CoreCard.jsx
+    //      | imports detail array
+    //      v
+    //   coreDetailData.js
+    //      | import DemoControlledUncontrolled from "../components/demos/DemoControlledUncontrolled.jsx";
+    //      | ...
+    //      | { title: "Controlled vs. Uncontrolled Components", ..., demo: DemoControlledUncontrolled }
+    //      v
+    //   DemoControlledUncontrolled.jsx
+    //      | const [controlledValue, setControlledValue] = useState("");
+    //      | <input value={controlledValue} onChange={(e) => setControlledValue(e.target.value.toUpperCase())} />
+    //      | const uncontrolledRef = useRef(null);
+    //      | const [uncontrolledDisplay, setUncontrolledDisplay] = useState("(not read yet)");
+    //      | <input ref={uncontrolledRef} defaultValue="" />
+    //      | const readUncontrolled = () => setUncontrolledDisplay(uncontrolledRef.current.value);
+    //      | <button onClick={readUncontrolled}>Read Value</button>
+    //
+    // At render time in CoreCard.jsx:
+    //   {details.demo && <details.demo />}
+    //   -> for the controlled/uncontrolled entry, this becomes <DemoControlledUncontrolled />
+    //   -> mounts two inputs side by side: one reactive on every keystroke,
+    //      one silent until its value is explicitly read via a button click
+    //
+    // Difference from every other card's wire so far:
+    //   Same overall shape as every other card in the split structure
+    //   (CoreCard.jsx + coreDetailData.js -> demo: field -> <details.demo />).
+    //   The only thing that changes per card is WHICH file gets imported
+    //   and WHAT that file's internal logic does.
+    //
+    // What's different INSIDE this one, conceptually (not the wiring, the concept itself):
+    //   This is the first card to combine TWO earlier concepts on purpose,
+    //   side by side, as its entire point: useState (controlled) directly next
+    //   to useRef (uncontrolled) — not introducing new hook mechanics, but
+    //   showing the same job (getting a value out of an input) done two
+    //   completely different ways. Every earlier demo taught ONE approach in
+    //   isolation; this is the first comparison-style demo since useMemo's
+    //   two-button contrast, but here the contrast is between two entirely
+    //   different HOOKS, not two branches of the same hook's behavior.
+  `,
+  tags: [
+    "useState()",
+    "forms",
+    "inputs",
+    "controlled",
+    "uncontrolled",
+    "handler"
+  ],
+  demo: DemoControlledUncontrolled, // calling the component that renders the concept; so it can be used in the CoreCard.jsx component
   category: "Core React",
   },
 

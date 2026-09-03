@@ -5,7 +5,7 @@
 /* add standard custom colors to the overall theme */
 @theme {
     --color-background: #16161d;
-    --color-copy: #16461d;
+    --color-copy: #16161d;
 }
 
 /* define project base styles */
