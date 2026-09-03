@@ -5,7 +5,7 @@ import hookDetail from "../data/hookDetailData.js";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"; // react-syntax-highlighter
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"; // react-syntax-highlighter
 
-const Card = () => {
+const HookCard = () => {
   return (
     <>
       <div className="container mx-auto px-6 relative text-white pt-6">
@@ -121,4 +121,4 @@ const Card = () => {
   );
 };
 
-export default Card;
+export default HookCard;

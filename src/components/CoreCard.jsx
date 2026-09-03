@@ -5,18 +5,49 @@ import coreDetail from "../data/coreDetailData.js";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter"; // react-syntax-highlighter
 import { oneDark } from "react-syntax-highlighter/dist/esm/styles/prism"; // react-syntax-highlighter
 
-const Card = () => {
+const CoreCard = () => {
   return (
     <>
       <div className="container mx-auto px-6 relative text-white pt-6">
         <h1 className="text-6xl pb-3">REACT CORE CONCEPTS</h1>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas
-          vitae nibh venenatis, interdum dui non, vestibulum nisi. Fusce a arcu
-          diam. Morbi placerat enim at eros convallis, at dignissim massa
-          placerat. Nam hendrerit fringilla dictum. Vivamus et eleifend dolor,
-          ut placerat metus. Sed et viverra felis, gravida vulputate est. Fusce
-          dapibus placerat nisi, id vehicula tortor semper non.
+          These five foundational patterns are the structural rules governing how
+          React components actually communicate and render — separate from any
+          hook, and true even in a component built with no hooks at all. Where
+          hooks give a component new capabilities, these patterns govern the
+          basic mechanics every component operates within. Props & prop drilling
+          is how data flows one-directionally from parent to child, with
+          drilling being what happens when that data is needed several layers
+          deep, forcing intermediate components to relay a value they never use
+          themselves. Conditional rendering is how a component decides what to
+          show, using plain JavaScript expressions (&&, ternaries, if/else)
+          embedded directly in JSX rather than any special templating syntax.
+        </p>
+        <br />
+        <p>
+          Lists & keys is how a collection of data becomes a collection of UI
+          via .map(), with the key prop telling React which rendered element
+          corresponds to which specific piece of data across re-renders — get it
+          wrong, and state can silently attach to the wrong item. Controlled vs.
+          uncontrolled components describes two ways a form input's value can be
+          managed: driven live by React state on every keystroke, or left for
+          the DOM to manage on its own and read only on demand via a ref.
+          Component composition / children prop is how components combine to
+          build larger UI by passing actual JSX — not just data — into a
+          component via children, letting a wrapper like a Card or Modal stay
+          flexible around genuinely unpredictable content.
+        </p>
+        <br />
+        <p>
+          These five interlock constantly in real components rather than
+          existing as isolated trivia — a list commonly renders items that are
+          conditionally styled, a controlled input's value is exactly the kind
+          of data passed down through props, and a composed wrapper often needs
+          to conditionally render around its children, not just display them.
+          None of this requires a hook to exist, but every hook built in this
+          same phase gets used through this exact structural layer — which is
+          why this half of Core Foundation is what makes the hooks half actually
+          usable in real, working UI rather than isolated syntax.
         </p>
         <br />
       </div>
@@ -82,4 +113,4 @@ const Card = () => {
   );
 };
 
-export default Card;
+export default CoreCard;

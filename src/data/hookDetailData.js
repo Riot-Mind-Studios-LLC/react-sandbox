@@ -2522,32 +2522,6 @@ const detail = [
   demo: DemoUseCallback, // calling the component that renders a useCallback(); so it can be used in the Card.jsx component
   category: "React Hooks",
   },
-  {
-    title: "() React Hook",
-    description:
-      "",
-    example: `
-    ███╗   ██╗███████╗██╗    ██╗
-    ████╗  ██║██╔════╝██║    ██║
-    ██╔██╗ ██║█████╗  ██║ █╗ ██║
-    ██║╚██╗██║██╔══╝  ██║███╗██║
-    ██║ ╚████║███████╗╚███╔███╔╝
-    ╚═╝  ╚═══╝╚══════╝ ╚══╝╚══╝                      
-
-    // ============================================
-    // React Hook
-    // ============================================
-    //
-    
-  `,
-  tags: [
-    "()",
-    ".js data-file",
-    ".jsx demo-file",
-  ],
-  demo: DemoUseState, // calling the component that renders a (); so it can be used in the Card.jsx component
-  category: "React Hooks",
-  },
 ];
 
 // export the data from the detail array in detailData.js

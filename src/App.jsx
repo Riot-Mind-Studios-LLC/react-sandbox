@@ -33,6 +33,8 @@
 // import components
 import HookCard from "./components/HookCard.jsx";
 import CoreCard from "./components/CoreCard.jsx";
+import ProductionCard from "./components/ProductionCard.jsx";
+// import SandboxCard from "./components/SandboxCard.jsx";
 
 const App = () => {
   // add javascript
@@ -46,6 +48,8 @@ const App = () => {
         <main>
           <HookCard />
           <CoreCard />
+          <ProductionCard />
+          {/* <SandboxCard /> */}
         </main>
         
       </div>
