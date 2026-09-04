@@ -9,6 +9,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  base: "/react-sandbox/",
   test: {
     globals: true,
     environment: "jsdom", // simulates a browser DOM in Node, since tests aren't run in a real browser
