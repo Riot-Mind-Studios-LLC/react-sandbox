@@ -11,46 +11,54 @@ const Card = () => {
       <div className="container mx-auto px-6 relative text-white pt-6">
         <h1 className="text-6xl pb-3">REACT PRODUCTION CONCEPTS</h1>
         <p>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et
-          ipsum ex. Pellentesque feugiat tortor vel pulvinar fringilla. Interdum
-          et malesuada fames ac ante ipsum primis in faucibus. Nunc nulla dolor,
-          euismod vel tristique sed, ultricies in tortor. Donec viverra lectus
-          vitae mollis accumsan. Sed vestibulum turpis sit amet eros molestie
-          gravida. Praesent eleifend ante at felis accumsan convallis. Aliquam
-          efficitur metus a fermentum fermentum. Pellentesque facilisis congue
-          velit, ac imperdiet diam bibendum et. Fusce eget leo sit amet orci
-          euismod elementum. Orci varius natoque penatibus et magnis dis
-          parturient montes, nascetur ridiculus mus. Class aptent taciti
-          sociosqu ad litora torquent per conubia nostra, per inceptos
-          himenaeos. Praesent auctor erat non diam pharetra tempor. Mauris
-          convallis libero ac sodales tristique. Nulla venenatis justo quis dui
-          scelerisque, at venenatis ligula feugiat.
+          Production & Ecosystem — is a shift from how React works (Phase 1's
+          hooks and patterns) to how real, deployed apps actually get built
+          around React. Error boundaries and Suspense are React's own built-in
+          tools for handling the unexpected and the not-yet-ready: an error
+          boundary catches a genuine JavaScript crash during rendering and shows
+          a fallback instead of taking down the whole app, while Suspense shows
+          a fallback while something is still loading — a lazy-loaded
+          component's code, or a Promise being read via use(). React Router adds
+          client-side navigation on top of that foundation, letting a
+          single-page app show different content for different URLs without a
+          full page reload, while keeping the browser's back button,
+          bookmarking, and shareable links all working the way users expect.
         </p>
         <br />
         <p>
-          Sed elit neque, bibendum a lorem ut, auctor consectetur metus.
-          Vestibulum et magna id risus aliquam dictum et id velit. Vivamus
-          pulvinar dictum libero, vel varius magna rutrum sit amet. Ut vel
-          vestibulum purus. Donec commodo dui quis nunc vestibulum, id tempus
-          lacus fermentum. Maecenas quis ipsum in nibh sagittis congue.
-          Suspendisse euismod rutrum sem euismod pharetra. Morbi faucibus at
-          erat eget tempor. Donec non ipsum lectus. Integer magna ex, accumsan
-          quis lorem sed, hendrerit mollis risus. Curabitur tempor est at risus
-          tincidunt mollis. Ut hendrerit odio ut euismod rhoncus. Fusce
-          fringilla ex at rutrum consequat. Maecenas rutrum leo sit amet risus
-          tempus elementum. Curabitur facilisis, odio et auctor maximus, justo
-          quam porttitor ligula, aliquet tincidunt eros dolor ut nisl. Nulla
-          facilisi.
+          React Hook Form and React Testing Library/Vitest both address a
+          different kind of scaling problem — not "how does one component work,"
+          but "how does this stay manageable as the app grows." React Hook Form
+          replaces hand-rolled useState-per-field forms with a single hook that
+          tracks values, validation, and errors internally, using uncontrolled
+          inputs specifically to avoid re-rendering the whole form on every
+          keystroke — a real performance win once a form has more than a couple
+          of fields. Testing verifies that all of this — hooks, forms, rendered
+          output — actually behaves correctly, by simulating how a real user
+          would interact with a component (clicking, typing, reading visible
+          text) rather than checking internal implementation details, and it
+          runs entirely outside the browser, in a terminal, as its own separate
+          step from the app actually running.
         </p>
         <br />
         <p>
-          Quisque posuere iaculis augue, sit amet dapibus magna rutrum sit amet.
-          Aliquam at porta massa. Quisque viverra enim orci, sollicitudin
-          fermentum nunc vulputate ac. Pellentesque iaculis augue sed tellus
-          porta ornare. Curabitur volutpat, quam id rhoncus pretium, mauris
-          lorem porta neque, non hendrerit dolor nibh vitae magna. Nulla libero
-          odio, accumsan et lorem ut, vehicula auctor ipsum. Aenean tempor
-          blandit nisl, quis hendrerit est ornare quis.
+          The remaining items were about breadth and professional context rather
+          than new mechanics: TypeScript layers type safety over everything
+          already learned, without introducing new React concepts of its own;
+          accessibility is less a new tool and more a lens applied to everything
+          already built — using real semantic elements, pairing labels with
+          inputs, and managing keyboard focus so the app works for people who
+          can't use a mouse or can't see the screen; and styling architecture
+          beyond Tailwind rounds out the picture with what else exists in the
+          ecosystem (CSS Modules, the now-declining styled-components),
+          confirming that the Tailwind + shadcn stack already in use is the
+          current, industry-dominant choice rather than one option among equals.
+          Two items were deliberately set aside rather than forced in — Server
+          Components/Next.js, since it isn't resume-relevant and can't be
+          meaningfully demonstrated without a full framework the sandbox doesn't
+          have — a reminder that a complete roadmap isn't the same as covering
+          literally everything that exists, but covering what's genuinely useful
+          for where this skill set is actually headed.
         </p>
         <br />
       </div>
