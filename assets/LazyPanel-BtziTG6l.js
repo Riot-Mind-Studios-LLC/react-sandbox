@@ -1,0 +1,1 @@
+import{t as e}from"./index-DMUZGc3s.js";var t=e(),n=()=>(0,t.jsx)(`div`,{className:`p-3 rounded-md border border-amber-400 bg-amber-100 text-black`,children:(0,t.jsx)(`p`,{className:`text-sm font-medium`,children:`I loaded! This code was in a separate chunk.`})});export{n as default};
