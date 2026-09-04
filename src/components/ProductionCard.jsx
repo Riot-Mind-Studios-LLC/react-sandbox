@@ -11,43 +11,46 @@ const Card = () => {
       <div className="container mx-auto px-6 relative text-white pt-6">
         <h1 className="text-6xl pb-3">REACT PRODUCTION CONCEPTS</h1>
         <p>
-          These five foundational patterns are the structural rules governing how
-          React components actually communicate and render — separate from any
-          hook, and true even in a component built with no hooks at all. Where
-          hooks give a component new capabilities, these patterns govern the
-          basic mechanics every component operates within. Props & prop drilling
-          is how data flows one-directionally from parent to child, with
-          drilling being what happens when that data is needed several layers
-          deep, forcing intermediate components to relay a value they never use
-          themselves. Conditional rendering is how a component decides what to
-          show, using plain JavaScript expressions (&&, ternaries, if/else)
-          embedded directly in JSX rather than any special templating syntax.
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec et
+          ipsum ex. Pellentesque feugiat tortor vel pulvinar fringilla. Interdum
+          et malesuada fames ac ante ipsum primis in faucibus. Nunc nulla dolor,
+          euismod vel tristique sed, ultricies in tortor. Donec viverra lectus
+          vitae mollis accumsan. Sed vestibulum turpis sit amet eros molestie
+          gravida. Praesent eleifend ante at felis accumsan convallis. Aliquam
+          efficitur metus a fermentum fermentum. Pellentesque facilisis congue
+          velit, ac imperdiet diam bibendum et. Fusce eget leo sit amet orci
+          euismod elementum. Orci varius natoque penatibus et magnis dis
+          parturient montes, nascetur ridiculus mus. Class aptent taciti
+          sociosqu ad litora torquent per conubia nostra, per inceptos
+          himenaeos. Praesent auctor erat non diam pharetra tempor. Mauris
+          convallis libero ac sodales tristique. Nulla venenatis justo quis dui
+          scelerisque, at venenatis ligula feugiat.
         </p>
         <br />
         <p>
-          Lists & keys is how a collection of data becomes a collection of UI
-          via .map(), with the key prop telling React which rendered element
-          corresponds to which specific piece of data across re-renders — get it
-          wrong, and state can silently attach to the wrong item. Controlled vs.
-          uncontrolled components describes two ways a form input's value can be
-          managed: driven live by React state on every keystroke, or left for
-          the DOM to manage on its own and read only on demand via a ref.
-          Component composition / children prop is how components combine to
-          build larger UI by passing actual JSX — not just data — into a
-          component via children, letting a wrapper like a Card or Modal stay
-          flexible around genuinely unpredictable content.
+          Sed elit neque, bibendum a lorem ut, auctor consectetur metus.
+          Vestibulum et magna id risus aliquam dictum et id velit. Vivamus
+          pulvinar dictum libero, vel varius magna rutrum sit amet. Ut vel
+          vestibulum purus. Donec commodo dui quis nunc vestibulum, id tempus
+          lacus fermentum. Maecenas quis ipsum in nibh sagittis congue.
+          Suspendisse euismod rutrum sem euismod pharetra. Morbi faucibus at
+          erat eget tempor. Donec non ipsum lectus. Integer magna ex, accumsan
+          quis lorem sed, hendrerit mollis risus. Curabitur tempor est at risus
+          tincidunt mollis. Ut hendrerit odio ut euismod rhoncus. Fusce
+          fringilla ex at rutrum consequat. Maecenas rutrum leo sit amet risus
+          tempus elementum. Curabitur facilisis, odio et auctor maximus, justo
+          quam porttitor ligula, aliquet tincidunt eros dolor ut nisl. Nulla
+          facilisi.
         </p>
         <br />
         <p>
-          These five interlock constantly in real components rather than
-          existing as isolated trivia — a list commonly renders items that are
-          conditionally styled, a controlled input's value is exactly the kind
-          of data passed down through props, and a composed wrapper often needs
-          to conditionally render around its children, not just display them.
-          None of this requires a hook to exist, but every hook built in this
-          same phase gets used through this exact structural layer — which is
-          why this half of Core Foundation is what makes the hooks half actually
-          usable in real, working UI rather than isolated syntax.
+          Quisque posuere iaculis augue, sit amet dapibus magna rutrum sit amet.
+          Aliquam at porta massa. Quisque viverra enim orci, sollicitudin
+          fermentum nunc vulputate ac. Pellentesque iaculis augue sed tellus
+          porta ornare. Curabitur volutpat, quam id rhoncus pretium, mauris
+          lorem porta neque, non hendrerit dolor nibh vitae magna. Nulla libero
+          odio, accumsan et lorem ut, vehicula auctor ipsum. Aenean tempor
+          blandit nisl, quis hendrerit est ornare quis.
         </p>
         <br />
       </div>
@@ -62,7 +65,7 @@ const Card = () => {
             {productionDetail.map((details, key) => (
               <div
                 key={key}
-                className="p-6 rounded-lg border border-fuchsia-400 bg-fuchsia-600"
+                className="p-6 rounded-lg border border-fuchsia-400 bg-fuchsia-500"
               >
                 {/* card content */}
                 <div className="text-left mb-4">
