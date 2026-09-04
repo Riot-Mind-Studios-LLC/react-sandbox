@@ -3,6 +3,7 @@ import DemoErrorBoundary from "../components/demos/DemoErrorBoundary.jsx";
 import DemoSuspense from "../components/demos/DemoSuspense.jsx";
 import DemoRouter from "../components/demos/DemoRouter.jsx";
 import DemoReactHookForm from "../components/demos/DemoReactHookForm.jsx";
+import DemoTestedCounter from "../components/demos/DemoTestedCounter.jsx";
 
 // source: https://www.w3schools.com/
 
@@ -1053,6 +1054,269 @@ const detail = [
     "React Hook Form",
   ],
   demo: DemoReactHookForm, // calling the component that renders a (); so it can be used in the Card.jsx component
+  category: "React Production Concepts",
+  },
+  {
+    title: "Production Concepts: React Testing Library",
+    description:
+      "React Testing Library is a library for testing React components by interacting with them the way a real user would — finding elements by visible text, labels, or roles, clicking buttons, typing into inputs — rather than testing internal implementation details (state variables, which functions got called). Its core philosophy, summarized directly from its own documentation: the more your tests resemble the way your software is used, the more confidence they can give you. Vitest is the actual test runner — the tool that finds your test files, executes them, and reports pass/fail — and it's what your npm test command would actually invoke. React Testing Library provides functions for querying/interacting with rendered components; Vitest provides describe, it/test, and expect for structuring and asserting those tests. They're not competitors, they work together: Vitest runs the tests, React Testing Library helps you write what's inside them.",
+    example: `
+    //***************************************************************************
+    // ** React Testing Library - / Vitest + / Jest
+    //***************************************************************************
+    ████████╗███████╗███████╗████████╗██╗███╗   ██╗ ██████╗     ██╗     ██╗██████╗ 
+    ╚══██╔══╝██╔════╝██╔════╝╚══██╔══╝██║████╗  ██║██╔════╝     ██║     ██║██╔══██╗
+       ██║   █████╗  ███████╗   ██║   ██║██╔██╗ ██║██║  ███╗    ██║     ██║██████╔╝
+       ██║   ██╔══╝  ╚════██║   ██║   ██║██║╚██╗██║██║   ██║    ██║     ██║██╔══██╗
+       ██║   ███████╗███████║   ██║   ██║██║ ╚████║╚██████╔╝    ███████╗██║██████╔╝
+       ╚═╝   ╚══════╝╚══════╝   ╚═╝   ╚═╝╚═╝  ╚═══╝ ╚═════╝     ╚══════╝╚═╝╚═════╝ 
+                                                                               
+    // ============================================
+    // React Production: React Testing Library
+    // ============================================
+    //
+    // 1. Dependancy
+    npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
+    //
+    // Basic pattern
+    import { render, screen, fireEvent } from "@testing-library/react";
+    import { describe, it, expect } from "vitest";
+    import Counter from "./Counter";
+
+    describe("Counter", () => {
+      it("starts at 0", () => {
+        render(<Counter />);
+        expect(screen.getByText("Count: 0")).toBeInTheDocument();
+      });
+
+      it("increments when the button is clicked", () => {
+        render(<Counter />);
+        const button = screen.getByRole("button", { name: /add/i });
+
+        fireEvent.click(button);
+
+        expect(screen.getByText("Count: 1")).toBeInTheDocument();
+      });
+    });
+
+    /* The pieces, broken down:
+        - describe("Counter", () => {...}) — groups related tests together under a shared label, purely organizational.
+        - it("starts at 0", () => {...}) — one individual test case. it and test are interchangeable in Vitest; it reads more like a sentence ("it starts at 0").
+        - render(<Counter />) — from React Testing Library, this mounts your component into a virtual DOM for the test to interact with.
+        - screen.getByText(...) / screen.getByRole(...) — these are queries — how you find elements, matching the "test like a user"
+          philosophy: getByRole("button", { name: /add/i }) finds a button by its accessible role and visible text, the same way a
+          screen reader or a real user visually scanning the page would locate it — not by a CSS class or an internal implementation detail.
+        - fireEvent.click(button) — simulates a real user interaction, here a click.
+        - expect(...).toBeInTheDocument() — the actual assertion. toBeInTheDocument() specifically comes from @testing-library/jest-dom
+          (a companion matcher library, name notwithstanding — it works with Vitest too), extending expect with DOM-specific checks beyond Vitest's built-in matchers.
+        - Worth naming directly — this exact pattern tests your own DemoUseState.jsx counter, almost word for word.
+          The component you built weeks ago to teach useState is also a perfect, realistic subject for testing it — which is a
+          good thing to notice: testing isn't a separate skill bolted onto components you already know, it's verifying
+          the same components you've been building the entire time.
+    */
+
+    /* NOTE:
+        Tests don't run in the browser at all — Vitest runs in a terminal process, separate from your app entirely. So this card's "demo"
+        can only be the component being tested, rendered normally — the actual proof of testing happens in your terminal via npm test,
+        not by clicking anything in the card.
+    */
+
+    // 2. Configure Vitest in vite.config.js
+    /// <reference types="vitest" />
+    import { defineConfig } from "vite";
+    import react from "@vitejs/plugin-react";
+
+    export default defineConfig({
+      plugins: [react()],
+      test: {
+        globals: true,
+        environment: "jsdom", // simulates a browser DOM in Node, since tests aren't run in a real browser
+        setupFiles: "./src/setupTests.js",
+      },
+    });
+
+    // 3. Create a setup file — src/setupTests.js
+    // This extends Vitest's expect with DOM-specific matchers like toBeInTheDocument() — without this file, that matcher wouldn't exist.
+    import "@testing-library/jest-dom";
+
+    // 4. Add the test script to package.json
+    "scripts": {
+      "test": "vitest"
+    }
+
+    // 5. Create the component being tested — src/components/demos/DemoTestedCounter.jsx
+    // This is genuinely just your original DemoUseState counter, renamed — this card's demo component in productionDetailData.js is this file, wired the normal way.
+    import { useState } from "react";
+
+    const DemoTestedCounter = () => {
+      const [count, setCount] = useState(0);
+
+      return (
+        <div>
+          <p>Count: {count}</p>
+          <button
+            onClick={() => setCount(count + 1)}
+          >
+            Add
+          </button>
+        </div>
+      );
+    };
+
+    export default DemoTestedCounter;
+
+    // 6. Create the actual test file — src/components/demos/DemoTestedCounter.test.jsx
+    import { render, screen, fireEvent } from "@testing-library/react";
+    import { describe, it, expect } from "vitest";
+    import DemoTestedCounter from "./DemoTestedCounter";
+
+    describe("DemoTestedCounter", () => {
+      it("starts at 0", () => {
+        render(<DemoTestedCounter />);
+        expect(screen.getByText("Count: 0")).toBeInTheDocument();
+      });
+
+      it("increments when the button is clicked", () => {
+        render(<DemoTestedCounter />);
+        const button = screen.getByRole("button", { name: /add/i });
+
+        fireEvent.click(button);
+
+        expect(screen.getByText("Count: 1")).toBeInTheDocument();
+      });
+    });
+
+    /* How you actually "confirm" this card, genuinely different from every other one:
+        - wire DemoTestedCounter into productionDetailData.js the normal way (you'll see the
+        working counter in the card, same as always) — but the real proof of this whole concept
+        happens by running npm test in your terminal, watching both tests report as passing. Try
+        breaking one on purpose afterward (e.g., change count + 1 to count + 2) and re-run — watch the
+        second test fail with a clear diff, then revert it — that failure/pass cycle is the actual
+        point of this card, not anything visible in the rendered card itself.
+    */
+
+    /* use case
+      - Preventing regressions — the core reason testing exists: a test written once keeps verifying
+        that behavior forever, catching it immediately if a future change accidentally breaks
+        something that used to work — exactly what you just watched happen when you
+        deliberately broke the increment logic.
+
+      - Form validation logic — testing that required fields show errors, that valid submissions
+        actually fire onSubmit, that invalid emails get rejected — directly applicable to your
+        React Hook Form card, verifying validation rules work correctly without manually retesting by hand every time.
+
+      - Conditional rendering paths — verifying that a component shows the right thing under different
+        states (logged in vs. out, loading vs. loaded vs. errored) — ties directly to your Conditional
+        Rendering card; a test can assert both branches render correctly without you manually toggling state in the browser every time.
+
+      - Custom hooks — React Testing Library has a dedicated utility (renderHook) specifically for testing custom hooks in isolation,
+        without needing to build a throwaway component just to exercise them — directly relevant to your own useToggle hook.
+
+      - Accessibility by default, as a side effect — worth noting directly: because React Testing
+        Library queries prioritize getByRole, getByLabelText, and similar accessible-first queries,
+        writing tests this way naturally nudges you toward more accessible markup — if a test can't
+        find your button by its role/label, a screen reader user probably can't either.
+        This previews your upcoming Accessibility card.
+
+      - Catching bugs before they reach code review or production — running npm test locally
+        (or automatically in CI, on every push) catches an obvious mistake before a human
+        reviewer has to spot it manually, or before it ships to real users.
+
+      - Confidence during refactoring — this is arguably the single biggest practical payoff:
+        a solid test suite means you can restructure a component's internals
+        (rename variables, reorganize logic, even rewrite it from scratch) with confidence
+        that the external behavior still works correctly, since the tests check behavior, not implementation.
+
+      - What React Testing Library deliberately does NOT encourage, worth knowing since it's the philosophy's
+        whole point: testing internal state values directly, testing that a specific function got called, or
+        testing implementation details in general. The philosophy explicitly discourages that — tests are meant
+        to survive a component being rewritten internally, as long as it still behaves the same way from a user's perspective.
+    */
+
+    // ============================================
+    // THE Testing (React Testing Library + Vitest) WIRE (specific instance) - HOW THE FILES ARE CONNECTED AND WIRED TOGETHER
+    // ============================================
+    //
+    //   App.jsx
+    //      | renders <ProductionCard />
+    //      v
+    //   ProductionCard.jsx
+    //      | imports detail array
+    //      v
+    //   productionDetailData.js
+    //      | import DemoTestedCounter from "../components/demos/DemoTestedCounter.jsx";
+    //      | ...
+    //      | { title: "Testing (React Testing Library + Vitest)", ..., demo: DemoTestedCounter }
+    //      v
+    //   DemoTestedCounter.jsx                        <-- rendered normally in the card, like any other demo
+    //      | const [count, setCount] = useState(0);
+    //      | <button onClick={() => setCount(count + 1)}>Add</button>
+    //
+    // SEPARATE FROM THE ABOVE — does NOT run through App.jsx/ProductionCard.jsx at all:
+    //
+    //   DemoTestedCounter.test.jsx                   <-- lives alongside the component, same folder
+    //      | import DemoTestedCounter from "./DemoTestedCounter";
+    //      | describe("DemoTestedCounter", () => {
+    //      |   it("starts at 0", () => { render + expect ... });
+    //      |   it("increments when the button is clicked", () => { render + fireEvent.click + expect ... });
+    //      | });
+    //      v
+    //   vite.config.js (test block)  +  src/setupTests.js
+    //      | test: { environment: "jsdom", setupFiles: "./src/setupTests.js" }
+    //      | import "@testing-library/jest-dom";
+    //      v
+    //   Vitest (terminal process, via npm test)
+    //      -> discovers DemoTestedCounter.test.jsx automatically (any *.test.jsx file)
+    //      -> runs it in a simulated DOM (jsdom), reports PASS/FAIL in the terminal
+    //
+    // At render time in ProductionCard.jsx:
+    //   {details.demo && <details.demo />}
+    //   -> for the testing entry, this becomes <DemoTestedCounter />, same as any card
+    //   -> BUT the actual "proof" of this card lives entirely OUTSIDE App.jsx's
+    //      render tree — in a terminal running npm test, not in the browser
+    //
+    // Difference from every other card's wire so far:
+    //   This is the FIRST card in the entire registry where the thing being
+    //   demonstrated does NOT run inside the browser/React tree at all. Every
+    //   prior demo, no matter how different internally, was still something
+    //   you clicked and watched respond live on screen. This wire has TWO
+    //   completely separate execution contexts: the component (browser, via
+    //   App.jsx like normal) and the test (Node/terminal, via Vitest,
+    //   completely bypassing App.jsx, ProductionCard.jsx, and the browser
+    //   entirely).
+    //
+    // What's different INSIDE this one, conceptually (not the wiring, the concept itself):
+    //   Every earlier "wire" diagram traced how DATA and RENDERING connect
+    //   between files. This one traces something new: how a CONFIGURATION
+    //   FILE (vite.config.js's test block) and a SETUP FILE (setupTests.js)
+    //   silently extend a THIRD-PARTY TEST RUNNER's behavior (adding
+    //   toBeInTheDocument() to expect) — infrastructure that has zero
+    //   presence in App.jsx's actual component tree, yet is required for
+    //   the .test.jsx file to even run correctly.
+
+
+
+
+
+
+
+
+
+
+    
+  `,
+  tags: [
+    "Vitest",
+    "Jest",
+    "React Testing Library",
+    "npm test",
+    "describe",
+    "it",
+    "test",
+    "expect",
+    "vite"
+  ],
+  demo: DemoTestedCounter, // calling the component that renders a (); so it can be used in the Card.jsx component
   category: "React Production Concepts",
   },
   
