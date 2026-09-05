@@ -1,29 +1,20 @@
 // import components
-import DemoTestDemo from "../components/demos/sandboxDemos/DemoTestDemo.jsx"; // the component that renders the demo;
+import ListBuilder from "../components/demos/sandboxDemos/ListBuilder.jsx"; // the component that renders the demo;
 
-
-// source: https://www.w3schools.com/
 
 const detail = [
   {
-    title: "Project Title",
+    title: "List Builder App",
     description:
-      "A small description of what this project is",
-    example: `
-     __________________   ____
-    /_  __/  _/_  __/ /  / __/
-    / / _/ /  / / / /__/ _/  
-    /_/ /___/ /_/ /____/___/  
-
-    // ============================================
-    // Project:
-    // ============================================
-    //
-  `,
+      "A user needs an easy way to create a list based off their inputs.",
   tags: [
-    "tag",
+    "useState()",
+    "map()",
+    "<button>",
+    "<input>",
+    "[ ]"
   ],
-  demo: DemoTestDemo, // calling the component that renders the concept; so it can be used in the CoreCard.jsx component
+  demo: ListBuilder, // calling the component that renders the concept; so it can be used in the CoreCard.jsx component
   category: "Sandbox Project",
   },
   
