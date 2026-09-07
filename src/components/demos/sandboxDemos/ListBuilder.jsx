@@ -54,7 +54,7 @@ const ListBuilder = () => {
             setUserItem("");
           }
         }}
-        className="p-2 rounded-md border border-black hover:bg-teal-600"
+        className="p-2 rounded-md border border-black hover:bg-teal-600 hover:text-white"
       >
         Add Item
       </button>

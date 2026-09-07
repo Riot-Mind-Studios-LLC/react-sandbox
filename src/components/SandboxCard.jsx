@@ -47,7 +47,7 @@ const SandboxCard = () => {
                 {/* map through the tags array in the detail array and render content for each tag item in that array */}
                 <div className="flex flex-wrap gap-2">
                   <div className="w-full">
-                    <h3 className="font-semibold text-sm">Recipe</h3>
+                    <h3 className="font-semibold text-sm">Recipe</h3> 
                   </div>
 
                   {details.tags.map((tag, key) => (

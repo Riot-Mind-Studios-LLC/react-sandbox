@@ -46,20 +46,21 @@ This reads `package.json` and downloads everything the project needs into a `nod
 ```bash
 npm install tailwindcss @tailwindcss/vite
 ```
+
 Current (v4) setup — no `tailwind.config.js`, no `postcss`, no `autoprefixer` needed:
+
 1. Add the plugin to `vite.config.js`:
+
    ```javascript
-   import { defineConfig } from 'vite'
-   import react from '@vitejs/plugin-react'
-   import tailwindcss from '@tailwindcss/vite'
+   import { defineConfig } from "vite";
+   import react from "@vitejs/plugin-react";
+   import tailwindcss from "@tailwindcss/vite";
 
    export default defineConfig({
-     plugins: [
-       react(),
-       tailwindcss(),
-     ],
-   })
+     plugins: [react(), tailwindcss()],
+   });
    ```
+
 2. Add one import line to `src/index.css` (replacing whatever's currently at the top):
    ```css
    @import "tailwindcss";
@@ -72,6 +73,7 @@ Older tutorials (including some in the Learning Stack below) may show a differen
 ```bash
 npm i react-router-dom
 ```
+
 Enables multi-page navigation in a single-page app — define routes/pages in one place (commonly `App.jsx`) using `createBrowserRouter` and `<Route>`, wrap layouts around groups of pages, and navigate without a full page reload.
 
 **JSON Server**
@@ -79,12 +81,15 @@ Enables multi-page navigation in a single-page app — define routes/pages in on
 ```bash
 npm i -D json-server
 ```
+
 Creates a mock/fake REST API from a local JSON file, for practicing full CRUD (Create, Read, Update, Delete) during development. **Local development only — not for production/live apps.** Add a script to `package.json` to launch it on its own port, separate from the Vite dev server:
+
 ```json
 "scripts": {
   "server": "json-server src/jobs.json --port 8000"
 }
 ```
+
 Run with `npm run server` in a **second terminal**, alongside `npm run dev` running in the first — both need to stay running at the same time for fetch calls to reach it.
 
 **Interactive/UI Extras**
@@ -94,7 +99,7 @@ Small packages that add polish and user feedback — not core to a project, but 
 - **react-icons** — `npm i react-icons` — access to icon sets like Font Awesome and Material Icons as importable React components, instead of loading icon fonts manually.
 - **react-spinners** — `npm i react-spinners` — loading spinner components, used while data is being fetched, before content renders. Import from the package's top level, not a deep subpath (see Troubleshooting below):
   ```javascript
-  import { ClipLoader } from 'react-spinners';
+  import { ClipLoader } from "react-spinners";
   ```
 - **react-toastify** — `npm i react-toastify` — toast/notification popups for user feedback (e.g. success/error messages).
 - **lucide-react** — `npm i lucide-react` — general-purpose UI icon library (arrows, menus, checkmarks, etc.), an alternative to react-icons. Note: most brand/social logos (GitHub, LinkedIn, etc.) were removed from Lucide in v1 — use react-icons' `Fa` (Font Awesome) or `Si` (Simple Icons) sets for those instead.
@@ -106,6 +111,7 @@ Small packages that add polish and user feedback — not core to a project, but 
 1. **Path alias setup** (required before running the CLI)
 
    Create `jsconfig.json` at the project root:
+
    ```json
    {
      "compilerOptions": {
@@ -118,52 +124,60 @@ Small packages that add polish and user feedback — not core to a project, but 
    ```
 
    Add the matching alias to `vite.config.js` (uses `import.meta.dirname`, not `__dirname` — see Troubleshooting below for why):
+
    ```javascript
-   import path from 'path'
-   import { defineConfig } from 'vite'
-   import react from '@vitejs/plugin-react'
-   import tailwindcss from '@tailwindcss/vite'
+   import path from "path";
+   import { defineConfig } from "vite";
+   import react from "@vitejs/plugin-react";
+   import tailwindcss from "@tailwindcss/vite";
 
    export default defineConfig({
      plugins: [react(), tailwindcss()],
      resolve: {
        alias: {
-         '@': path.resolve(import.meta.dirname, './src'),
+         "@": path.resolve(import.meta.dirname, "./src"),
        },
      },
-   })
+   });
    ```
 
 2. **Initialize shadcn/ui**
+
    ```bash
    npx shadcn@latest init
    ```
+
    - Prompts to configure `components.json`. Since this project has no `tsconfig.json`, the CLI treats it as a JavaScript project and generates `.jsx` component files instead of `.tsx`.
    - Asks for a style, base color, and whether to use CSS variables for theming — any choice here is fine and can be changed later.
    - Asks for an icon library — choose **lucide-react**, since it's already part of this stack (see Interactive/UI Extras above).
 
 3. **Add components as needed**
+
    ```bash
    npx shadcn@latest add button
    npx shadcn@latest add dialog
    npx shadcn@latest add dropdown-menu
    ```
+
    - Each command drops a real, editable component file into `src/components/ui/` — not a package import. Open and edit these directly like any other component in the project.
    - Installing a component automatically installs its underlying Radix package as a dependency (e.g. `add dialog` installs `@radix-ui/react-dialog` behind the scenes) — no separate Radix install step needed for this path.
 
 4. **Use a component**
+
    ```jsx
-   import { Button } from "@/components/ui/button"
+   import { Button } from "@/components/ui/button";
 
    function App() {
-     return <Button variant="default">Click me</Button>
+     return <Button variant="default">Click me</Button>;
    }
    ```
 
 **Using raw Radix without shadcn** — for a fully custom component block (styled entirely by hand, no shadcn defaults), install the specific Radix primitive package directly instead of going through the CLI:
+
 ```bash
 npm i @radix-ui/react-dialog
 ```
+
 Radix ships one package per primitive (`@radix-ui/react-tooltip`, `@radix-ui/react-dropdown-menu`, etc.) rather than one bundled package — install only what's actually used.
 
 ## 3. Start the dev server
@@ -182,11 +196,13 @@ npm run dev
 ```bash
 npm run build
 ```
+
 Compiles/bundles the whole project into a `dist` folder — the optimized, production-ready version of the app. This is the version that actually gets deployed, not the raw source files.
 
 ```bash
 npm run preview
 ```
+
 Serves that `dist` folder locally, so you can test the production build in a browser before actually deploying it anywhere. Run this after `npm run build`, once development is done and before shipping.
 
 ## 4. Project structure — what matters early on
@@ -232,10 +248,13 @@ _React-Base/                     ← project base template root directory
 ```
 
 **`src/assets/` vs `public/` — which one to use:**
+
 - **`src/assets/`** — for anything **imported into a component and rendered as part of the UI** (an `<img>` tag, a logo used as an SVG component, project screenshots shown in cards). Vite processes, optimizes, and hashes these — they have to be brought in with `import`.
 - **`public/`** — for files that need a **fixed, direct URL**, with zero processing and often no import at all. Use this for a resume PDF, project source `.zip` downloads, a favicon — anything linked to or downloaded, never displayed as an image in the page itself. Reference these as a plain string path (e.g. `"/downloads/resume.pdf"`), paired with the `download` attribute on an `<a>` tag:
   ```jsx
-  <a href="/downloads/resume.pdf" download="Adrian-Velazquez-Resume.pdf">Download CV</a>
+  <a href="/downloads/resume.pdf" download="Adrian-Velazquez-Resume.pdf">
+    Download CV
+  </a>
   ```
 
 ## 5. Git setup for a new project
@@ -257,41 +276,50 @@ git push -u origin main
 ## 6. Editor - Visual Studio Code: Dependencies
 
 **Core**
+
 - ESLint — plugs the linter into VS Code, shows warnings directly in the editor
 - Prettier – Code formatter — auto-formats code on save
 
 **React-specific**
+
 - ES7+ React/Redux/React-Native snippets — type `rafce` + tab to auto-generate a component
 - Simple React Snippets — lighter alternative to the one above
 
 **Tailwind**
+
 - Tailwind CSS IntelliSense — autocompletes class names, shows a preview of what each class does
 
 **Quality of life**
+
 - Auto Rename Tag — renaming an opening tag auto-renames its matching closing tag
 - Path Intellisense — autocompletes file paths inside import statements
 - Console Ninja — shows console.log output and runtime values directly inline in the editor, next to the line that produced them, instead of only in the browser/terminal console
 - Multiple Case Preserve — preserves variable naming case (camelCase, snake_case, etc.) when using find-and-replace or rename operations
 
 **Browser extension (not VS Code, but same setup ritual)**
+
 - React Developer Tools — already listed under Resources below
 
 ## 7. Troubleshooting
 
 **"GET http://localhost:8000/jobs net::ERR_CONNECTION_REFUSED" / "Failed to fetch"**
+
 - Cause: forgot to start json-server. It runs as a separate process from the Vite dev server.
 - Fix: open a second terminal tab/window and run `npm run server` while `npm run dev` keeps running in the first. Both need to stay running at the same time.
 
 **"Error: Element type is invalid: expected a string...but got: object. Check the render method of `Spinner`"** (react-spinners)
+
 - Cause: importing from a deep subpath (`import ClipLoader from 'react-spinners/ClipLoader'`) can fail to bundle correctly in Vite, even though it looks syntactically correct.
 - Fix: import the named export from the package's top level instead: `import { ClipLoader } from 'react-spinners'`.
 
 **json-server pagination silently returns all records instead of limiting them**
+
 - Cause: the `_limit` query param is deprecated in json-server v1 and gets silently ignored — no error, it just returns everything.
 - Fix: use `_page=1&_per_page=3` together instead of `_limit=3`.
 - Also note: adding pagination params changes the response shape. Instead of a plain array, you get back a wrapped object: `{ first, prev, next, last, pages, items, data: [...] }`. Extract `.data` from the response when pagination params are used — non-paginated requests still return a plain array as before.
 
 **"npm WARN npm does not support Node.js..." followed by "npm ERR! cb.apply is not a function" on any install command**
+
 - Cause: an old, broken global npm install (leftover from a legacy permissions workaround, living outside the normal Node install path) silently overrides the correct npm that should load automatically with the current Node version. This is a machine-level PATH/environment issue, not a project or package problem — it can resurface in any future project on the same machine if not fixed at the system level.
 - Fix: install `nvm` (Node Version Manager) fresh, then run:
   ```bash
@@ -306,6 +334,7 @@ git push -u origin main
   ```
 
 **"npm error code EALLOWSCRIPTS" / "--allow-scripts is not allowed in project-scoped installs"** on `npx create-vite` or other fresh installs
+
 - Cause: a global `~/.npmrc` file has a leftover `allow-scripts=@anthropic-ai/claude-code` line (added automatically when Claude Code was installed). A known npm 11.x bug incorrectly forwards this global setting into fresh project-scoped installs, causing a false failure — this has nothing to do with the actual project being created.
 - Fix:
   ```bash
@@ -314,15 +343,18 @@ git push -u origin main
   Then retry the install. This is a one-time, machine-level fix — it won't need repeating unless something re-adds the line later.
 
 **"npm warn allow-scripts 1 package has install scripts not yet covered by allowScripts" (e.g. fsevents@2.3.3)**
+
 - This is routine, not an error. `fsevents` is a small Mac-only helper package (used by Vite's dev server to detect file changes efficiently via a macOS-native file-watching feature) that has an install script. Recent npm versions pause and require explicit approval before running any package's install script, as a security precaution.
 - Fix: run `npm approve-scripts fsevents@2.3.3` (or whichever package is flagged) — safe to approve for well-known, widely-used packages like fsevents.
 - Note: fsevents does nothing on Windows/Linux, Mac-only.
 
-**"__dirname is not defined in ES module scope"** in `vite.config.js`
+**"\_\_dirname is not defined in ES module scope"** in `vite.config.js`
+
 - Cause: Vite config files run as ES Modules, and `__dirname` is a CommonJS-only global — it doesn't exist in ESM, even though a lot of older tutorials and blog posts still show it.
 - Fix: use `import.meta.dirname` instead — built into modern Node, no import or polyfill required, drop-in replacement for `__dirname`. This is what's used in the shadcn/ui path alias setup above.
 
 **shadcn CLI still asks about TypeScript, or errors about a missing `tsconfig.json`**
+
 - Cause: some CLI versions expect a config file to exist before they can tell a JavaScript project from a TypeScript one. A missing `jsconfig.json` can trigger this even in an all-JavaScript project.
 - Fix: make sure `jsconfig.json` exists at the project root (see shadcn/ui & Radix UI, Step 1 above) before running `npx shadcn@latest init`. If it still prompts to choose, answer **no** to TypeScript — the CLI will generate `.jsx` files and set `"tsx": false` in `components.json` automatically.
 
@@ -347,9 +379,9 @@ git push -u origin main
 - React has a compiler that will convert your react code into regular javascript
 - The compiler optimizes react code automatically so there no longer a need for memoization
 - React Applications:
-    - Single Page App (SPA): Load a single HTML file and javascript loads the entire UI including routes
-    - Server-Side Rendered (SSR): Server sends fully rendered page to client where you can fetch data and load it as well (page renders on the server)
-    - Static Site Generation (SSG): A meta-framework (like Gatsby) generates static HTML files at build time
+  - Single Page App (SPA): Load a single HTML file and javascript loads the entire UI including routes
+  - Server-Side Rendered (SSR): Server sends fully rendered page to client where you can fetch data and load it as well (page renders on the server)
+  - Static Site Generation (SSG): A meta-framework (like Gatsby) generates static HTML files at build time
 
 **Vite**
 
@@ -377,7 +409,7 @@ git push -u origin main
 - NPM: https://www.npmjs.com/
 - React: https://react.dev/
 - Vite: https://vite.dev/
-- Tailwind: https://tailwindcss.com/ 
+- Tailwind: https://tailwindcss.com/
 - Codepen: https://codepen.io/trending
 - JSON Placeholder: https://jsonplaceholder.typicode.com/
 - React Developer Tools (Browser Extension): https://chromewebstore.google.com/detail/react-developer-tools/fmkadmapgofadopljbjfkapdkoienihi?hl=en-US&utm_source=ext_sidebar
@@ -387,8 +419,8 @@ git push -u origin main
 - react-spinners: https://www.davidhu.io/react-spinners/
 - react-toastify: https://fkhadra.github.io/react-toastify/
 - nvm (Node Version Manager): https://github.com/nvm-sh/nvm
-- React Snippets File: _reference/react-snippets.jsx
-- Tailwind Snippets File: _reference/tailwind-snippets.md
+- React Snippets File: \_reference/react-snippets.jsx
+- Tailwind Snippets File: \_reference/tailwind-snippets.md
 
 ## Learning Stack
 

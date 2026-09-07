@@ -42,18 +42,15 @@ const App = () => {
   return (
     // add jsx
 
-      <div className="min-h-screen overflow-x-hidden">
-
-        {/* main content of the page */}
-        <main>
-          <HookCard />
-          <CoreCard />
-          <ProductionCard />
-          <SandboxCard />
-        </main>
-        
-      </div>
-
+    <div className="min-h-screen overflow-x-hidden">
+      {/* main content of the page */}
+      <main>
+        <HookCard />
+        <CoreCard />
+        <ProductionCard />
+        <SandboxCard />
+      </main>
+    </div>
   );
 };
 

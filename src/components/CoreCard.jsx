@@ -11,17 +11,18 @@ const CoreCard = () => {
       <div className="container mx-auto px-6 relative text-white pt-6">
         <h1 className="text-6xl pb-3">REACT CORE CONCEPTS</h1>
         <p>
-          These five foundational patterns are the structural rules governing how
-          React components actually communicate and render — separate from any
-          hook, and true even in a component built with no hooks at all. Where
-          hooks give a component new capabilities, these patterns govern the
-          basic mechanics every component operates within. Props & prop drilling
-          is how data flows one-directionally from parent to child, with
-          drilling being what happens when that data is needed several layers
-          deep, forcing intermediate components to relay a value they never use
-          themselves. Conditional rendering is how a component decides what to
-          show, using plain JavaScript expressions (&&, ternaries, if/else)
-          embedded directly in JSX rather than any special templating syntax.
+          These five foundational patterns are the structural rules governing
+          how React components actually communicate and render — separate from
+          any hook, and true even in a component built with no hooks at all.
+          Where hooks give a component new capabilities, these patterns govern
+          the basic mechanics every component operates within. Props & prop
+          drilling is how data flows one-directionally from parent to child,
+          with drilling being what happens when that data is needed several
+          layers deep, forcing intermediate components to relay a value they
+          never use themselves. Conditional rendering is how a component decides
+          what to show, using plain JavaScript expressions (&&, ternaries,
+          if/else) embedded directly in JSX rather than any special templating
+          syntax.
         </p>
         <br />
         <p>
