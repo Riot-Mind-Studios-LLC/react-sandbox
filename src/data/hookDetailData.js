@@ -199,21 +199,21 @@ const detail = [
   //   -> for the useState entry, this becomes <DemoUseState />
   //   -> mounts the real, live counter component on the page
   `,
-  tags: [
-    "useState()",
-    ".js data-file",
-    ".jsx demo-file",
-    "stored variables",
-    "stored functions",
-  ],
-  demo: DemoUseState, // calling the component that renders a useState(); so it can be used in the Card.jsx component
-  category: "React Hooks",
+    tags: [
+      "useState()",
+      ".js data-file",
+      ".jsx demo-file",
+      "stored variables",
+      "stored functions",
+    ],
+    demo: DemoUseState, // calling the component that renders a useState(); so it can be used in the Card.jsx component
+    category: "React Hooks",
   },
   {
-  title: "useEffect() React Hook",
-  description:
-    "This hook is used to perform side-effects in react. It lets you synchronize with a system outside of react and is asynchronous. useEffect lets a component 'step outside' normal rendering to do something that isn't about what's on screen — things like starting a timer, subscribing to an event, fetching data, or syncing with something outside React (the DOM, browser APIs, a server). It runs automatically after render, and re-runs whenever the values in its dependency array change — so instead of the user triggering something (like a click or typing in a form field), the effect triggers itself in response to state/props changing, or once on mount if the dependency array is empty. Types of effects include: event based side effects (i.e. button click, filling out a form field) and render-based side effects (i.e. fetching data) - runs after render. You can use this hook when you need to sync your react code with a browser api. useEffect is a broad tool for lots of side effects (timers, subscriptions, DOM syncing, event listeners).",
-  example: `
+    title: "useEffect() React Hook",
+    description:
+      "This hook is used to perform side-effects in react. It lets you synchronize with a system outside of react and is asynchronous. useEffect lets a component 'step outside' normal rendering to do something that isn't about what's on screen — things like starting a timer, subscribing to an event, fetching data, or syncing with something outside React (the DOM, browser APIs, a server). It runs automatically after render, and re-runs whenever the values in its dependency array change — so instead of the user triggering something (like a click or typing in a form field), the effect triggers itself in response to state/props changing, or once on mount if the dependency array is empty. Types of effects include: event based side effects (i.e. button click, filling out a form field) and render-based side effects (i.e. fetching data) - runs after render. You can use this hook when you need to sync your react code with a browser api. useEffect is a broad tool for lots of side effects (timers, subscriptions, DOM syncing, event listeners).",
+    example: `
   ██╗   ██╗███████╗███████╗███████╗███████╗███████╗███████╗ ██████╗████████╗
   ██║   ██║██╔════╝██╔════╝██╔════╝██╔════╝██╔════╝██╔════╝██╔════╝╚══██╔══╝
   ██║   ██║███████╗█████╗  █████╗  █████╗  █████╗  █████╗  ██║        ██║
@@ -226,9 +226,21 @@ const detail = [
   // ============================================
   //
   // The useEffect Hook allows you to perform side effects in your components.
+  // useEffects are things happening as a consequence of something else
+  // For the most part, side effects are going to be the result of state changing
+  // You can control what the side effects are and what they react to
   // Some examples of side effects are: fetching data, directly updating the DOM, and timers.
   // useEffect accepts two arguments. The second argument is optional.
-  useEffect(<function>, <dependency>)
+  useEffect(function(){}, [dependency])
+  // or
+  useEffect(() => {}, []);
+  //
+  useEffect(() => {
+    // the code that runs
+    // optional return function
+  }, [thingToWatch]);
+  //
+  // the dependancy array is what you use to tell useEffect what it should listen to, react to, in order to run the code that runs in the useEffect
   //
   // Example: Use setTimeout() to count 1 second after initial render:
   import { useState, useEffect } from 'react';
@@ -406,15 +418,15 @@ const detail = [
   //   The only thing that changes per hook is WHICH file gets imported
   //   and WHAT that file's internal logic does.
   `,
-  tags: [
-    "useEffect()",
-    "useState()",
-    ".js data-file",
-    ".jsx demo-file",
-    "stored functions",
-  ],
-  demo: DemoUseEffect, // calling the component that renders a useEffect(); so it can be used in the Card.jsx component
-  category: "React Hooks",
+    tags: [
+      "useEffect()",
+      "useState()",
+      ".js data-file",
+      ".jsx demo-file",
+      "stored functions",
+    ],
+    demo: DemoUseEffect, // calling the component that renders a useEffect(); so it can be used in the Card.jsx component
+    category: "React Hooks",
   },
   {
     title: "useRef() React Hook",
@@ -938,16 +950,16 @@ const detail = [
   //   This is the first demo where the hook's whole point only shows up
   //   because there's a parent/child split at all.
   `,
-  tags: [
-    "createContext()",
-    "Provider",
-    "useContext()",
-    "useState()",
-    ".js data-file",
-    ".jsx demo-file",
-  ],
-  demo: DemoUseContext, // calling the component that renders a useContext(); so it can be used in the Card.jsx component
-  category: "React Hooks",
+    tags: [
+      "createContext()",
+      "Provider",
+      "useContext()",
+      "useState()",
+      ".js data-file",
+      ".jsx demo-file",
+    ],
+    demo: DemoUseContext, // calling the component that renders a useContext(); so it can be used in the Card.jsx component
+    category: "React Hooks",
   },
   {
     title: "useMemo() React Hook",
@@ -1479,7 +1491,7 @@ const detail = [
       "useState()",
       "useEffect()",
       ".js data-file",
-      ".jsx demo-file"
+      ".jsx demo-file",
     ],
     demo: DemoUseGSAP, // calling the component that renders a useGSAP(); so it can be used in the Card.jsx component
     category: "React Hooks",
@@ -1682,14 +1694,9 @@ const detail = [
     //     useReducer exists over useState once state gets complex enough.
 
   `,
-  tags: [
-    "useReducer()",
-    "useState()",
-    ".js data-file",
-    ".jsx demo-file",
-  ],
-  demo: DemoUseReducer, // calling the component that renders a useReducer(); so it can be used in the Card.jsx component
-  category: "React Hooks",
+    tags: ["useReducer()", "useState()", ".js data-file", ".jsx demo-file"],
+    demo: DemoUseReducer, // calling the component that renders a useReducer(); so it can be used in the Card.jsx component
+    category: "React Hooks",
   },
   {
     title: "customHook() React Hook",
@@ -1932,14 +1939,9 @@ const detail = [
     //   running off the exact same function.
     
   `,
-  tags: [
-    "customHook()",
-    "useState()",
-    ".js data-file",
-    ".jsx demo-file",
-  ],
-  demo: DemoCustomHook, // calling the component that renders a customHook(); so it can be used in the Card.jsx component
-  category: "React Hooks",
+    tags: ["customHook()", "useState()", ".js data-file", ".jsx demo-file"],
+    demo: DemoCustomHook, // calling the component that renders a customHook(); so it can be used in the Card.jsx component
+    category: "React Hooks",
   },
   {
     title: "useActionState() React-19 Hook",
@@ -2096,16 +2098,16 @@ const detail = [
     //     provides one natively as its third return value.
     
   `,
-  tags: [
-    "useActionSatet()",
-    "async",
-    "forms",
-    "api",
-    ".js data-file",
-    ".jsx demo-file",
-  ],
-  demo: DemoUseActionState, // calling the component that renders a useActionState(); so it can be used in the Card.jsx component
-  category: "React Hooks",
+    tags: [
+      "useActionSatet()",
+      "async",
+      "forms",
+      "api",
+      ".js data-file",
+      ".jsx demo-file",
+    ],
+    demo: DemoUseActionState, // calling the component that renders a useActionState(); so it can be used in the Card.jsx component
+    category: "React Hooks",
   },
   {
     title: "useOptimistic() React-19 Hook",
@@ -2253,13 +2255,9 @@ const detail = [
     //   behavior only works because the update happens inside a transition.
     
   `,
-  tags: [
-    "useOptimistic()",
-    ".js data-file",
-    ".jsx demo-file",
-  ],
-  demo: DemoUseOptimistic, // calling the component that renders a useOptimistic(); so it can be used in the Card.jsx component
-  category: "React Hooks",
+    tags: ["useOptimistic()", ".js data-file", ".jsx demo-file"],
+    demo: DemoUseOptimistic, // calling the component that renders a useOptimistic(); so it can be used in the Card.jsx component
+    category: "React Hooks",
   },
   {
     title: "useCallback() React Hook",
@@ -2512,15 +2510,15 @@ const detail = [
   //   doesn't change what's shown, it changes render efficiency, a category
   //   of hook behavior no earlier demo in this registry represented.
   `,
-  tags: [
-    "useCallback()",
-    "useState()",
-    "memo",
-    ".js data-file",
-    ".jsx demo-file",
-  ],
-  demo: DemoUseCallback, // calling the component that renders a useCallback(); so it can be used in the Card.jsx component
-  category: "React Hooks",
+    tags: [
+      "useCallback()",
+      "useState()",
+      "memo",
+      ".js data-file",
+      ".jsx demo-file",
+    ],
+    demo: DemoUseCallback, // calling the component that renders a useCallback(); so it can be used in the Card.jsx component
+    category: "React Hooks",
   },
 ];
 

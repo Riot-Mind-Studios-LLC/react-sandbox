@@ -24,8 +24,17 @@ const detail = [
   {
     title: "Weather App",
     description:
-      "A user needs to check current weather for every state in one application.",
-    tags: ["useState()"],
+      "A user needs to check current weather for every state in one app.",
+    tags: [
+      "useState()",
+      "useEffect()",
+      "fetch()",
+      "async / await",
+      ".json()",
+      "url",
+      ".map()",
+      "[ parallel ]",
+    ],
     demo: WeatherApp, // calling the component that renders the concept; so it can be used in the CoreCard.jsx component
     category: "Sandbox Project",
   },
