@@ -1,6 +1,7 @@
 // import components
 import ListBuilder from "../components/demos/sandboxDemos/ListBuilder.jsx"; // the component that renders the demo;
 import WeatherApp from "../components/demos/sandboxDemos/WeatherApp.jsx"; // the component that renders the demo;
+import QuotesApp from "../components/demos/sandboxDemos/QuotesApp.jsx"; // the component that renders the demo;
 
 const detail = [
   {
@@ -36,6 +37,13 @@ const detail = [
       "[ parallel ]",
     ],
     demo: WeatherApp, // calling the component that renders the concept; so it can be used in the CoreCard.jsx component
+    category: "Sandbox Project",
+  },
+  {
+    title: "Inspirational Quotes App",
+    description: "A user wants random inspirational quotes.",
+    tags: ["useState()", "fetch()", "api", "async / await", ".json()", "url"],
+    demo: QuotesApp, // calling the component that renders the concept; so it can be used in the CoreCard.jsx component
     category: "Sandbox Project",
   },
 ];
