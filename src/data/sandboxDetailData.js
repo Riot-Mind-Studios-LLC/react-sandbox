@@ -59,7 +59,19 @@ const detail = [
   {
     title: "Expense Tracker App",
     description: "A user wants to track daily income & expenses",
-    tags: ["useState()"],
+    tags: [
+      "useState()",
+      "inputs",
+      "<button>",
+      "CRUD",
+      "filter()",
+      "Number()",
+      "map()",
+      "reduce()",
+      "<select>",
+      "<option>",
+      "react-icons",
+    ],
     demo: ExpenseTrackerApp, // calling the component that renders the concept; so it can be used in the CoreCard.jsx component
     category: "Sandbox Project",
   },
