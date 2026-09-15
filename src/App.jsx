@@ -31,9 +31,9 @@
 
 // import layout
 // import components
-import HookCard from "./components/HookCard.jsx";
-import CoreCard from "./components/CoreCard.jsx";
-import ProductionCard from "./components/ProductionCard.jsx";
+// import HookCard from "./components/HookCard.jsx";
+// import CoreCard from "./components/CoreCard.jsx";
+// import ProductionCard from "./components/ProductionCard.jsx";
 import SandboxCard from "./components/SandboxCard.jsx";
 
 const App = () => {
@@ -45,9 +45,9 @@ const App = () => {
     <div className="min-h-screen overflow-x-hidden">
       {/* main content of the page */}
       <main>
-        <HookCard />
-        <CoreCard />
-        <ProductionCard />
+        {/* <HookCard /> */}
+        {/* <CoreCard /> */}
+        {/* <ProductionCard /> */}
         <SandboxCard />
       </main>
     </div>

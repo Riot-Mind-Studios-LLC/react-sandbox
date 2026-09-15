@@ -15,6 +15,8 @@
  * React treats null in JSX as "render nothing at all," which is slightly more explicit about intent than an empty paragraph tag.
  */
 
+// src: https://dummyjson.com/quotes
+
 // import dependancies
 import { useState } from "react";
 
@@ -53,5 +55,16 @@ const QuotesApp = () => {
 export default QuotesApp;
 
 /** claude recap
+ * Built: A random quote generator — click a button, fetch a random quote from DummyJSON's API, display the quote text and author, click again for a new one.
  *
+ * Concepts demonstrated:
+ * * Click-triggered fetch — a deliberate contrast to WeatherApp's useEffect pattern; no effect hook needed since nothing needs to "react" to a state change, the user's click is the trigger
+ * * Async/await fetch → .json() two-step, written from scratch without guidance this time
+ * * null initial state + ternary guard to prevent rendering empty/undefined data on first load
+ * * Passing a function reference (onClick={getQuote}) vs. calling it immediately (getQuote()) — and why the parentheses matter
+ * * Verifying an API is actually live before building on it (caught a dead endpoint and switched to a more reliable source)
+ * * Naming consistency between state value and setter
+ *
+ * Watch for later:
+ * * deliberately skipped here since the API responds instantly, but worth implementing on a future project with a slower or heavier request, where the wait is actually perceptible to a user.
  */
